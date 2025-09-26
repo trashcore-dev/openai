@@ -43,15 +43,11 @@ body:not(.logged-in) .wave.wave2 { opacity:0.15; }
 #downloadAppBtn { background:#32CD32; }
 #dismissAppBtn { background:#FF4500; }
 .card-row { display:flex; flex-direction:column; gap:20px; position:relative; }
-/* AI Chat */
-#aiChatPopup.hidden { display:none; }
-#aiChatPopup { position:fixed; bottom:20px; right:20px; width:300px; max-height:400px; background:#111; color:white; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.5); display:flex; flex-direction:column; overflow:hidden; z-index:1000; }
-#aiChatPopup .header { padding:10px; background:#222; font-weight:bold; display:flex; justify-content:space-between; align-items:center; }
-#aiChatPopup .messages { flex:1; padding:10px; overflow-y:auto; font-size:14px; }
-#aiChatPopup .input-area { display:flex; border-top:1px solid #333; }
-#aiChatPopup input { flex:1; border:none; padding:10px; background:#111; color:white; }
-#aiChatPopup button.send { background:#32CD32; border:none; color:white; padding:10px; cursor:pointer; }
-#chatAI { position:absolute; top:10px; left:10px; padding:8px 12px; background:#FFD700; border:none; border-radius:8px; font-weight:bold; cursor:pointer; z-index:10; }
+/* Embedded AI Chat */
+#embeddedChatBox input { background:#111; color:white; }
+#embeddedChatBox button { background:#32CD32; color:white; }
+#embeddedChatMessages .user-msg { text-align:right; margin:3px 0; background:#1E90FF; padding:5px 8px; border-radius:8px; }
+#embeddedChatMessages .ai-msg { text-align:left; margin:3px 0; background:#555; padding:5px 8px; border-radius:8px; }
 </style>
 </head>
 <body>
@@ -104,14 +100,21 @@ body:not(.logged-in) .wave.wave2 { opacity:0.15; }
 
     <!-- My Services Card -->
     <div class="card" style="position:relative;">
-      <button id="chatAI">💬 Chat AI</button>
-      <a href="https://t.me/YourBotUsername"><img src="https://files
-.catbox.moe/7x996w.jpg" alt="Logo" class="logo"></a>
+      <a href="https://t.me/YourBotUsername"><img src="https://files.catbox.moe/7x996w.jpg" alt="Logo" class="logo"></a>
       <h2>MY SERVICES</h2>
       <a href="https://t.me/TrashcoreBot" class="button telegram"><i class="fab fa-telegram-plane"></i> Server 1</a>
       <a href="http://t.me/Traschoreultra_bot" class="button telegram"><i class="fab fa-telegram-plane"></i> Server 2</a>
       <a href="https://t.me/theaccidentallygeniuses" class="button telegram"><i class="fab fa-telegram-plane"></i> Join Telegram group</a>
       <a href="https://whatsapp.com/channel/0029VafrbsKG8l5EFBDDCy41" class="button whatsapp"><i class="fab fa-whatsapp"></i> Join WhatsApp Channel</a>
+
+      <!-- Embedded AI Chat -->
+      <div id="embeddedChatBox">
+        <h3 style="margin-top:15px;">💬 AI Chat</h3>
+        <div id="embeddedChatMessages" style="display:flex; flex-direction:column; max-height:200px; overflow-y:auto; padding:5px; background:#222; border-radius:12px;"></div>
+        <input type="text" id="embeddedChatInput" placeholder="Type your message..." style="margin-top:8px; padding:8px; border-radius:8px; border:none; width:95%;">
+        <button id="embeddedChatSend" style="margin-top:5px; padding:10px 15px; border:none; border-radius:8px; background:#32CD32; color:white; font-weight:bold; cursor:pointer;">Send</button>
+      </div>
+
       <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
 
@@ -134,22 +137,6 @@ body:not(.logged-in) .wave.wave2 { opacity:0.15; }
   </div>
 </div>
 
-<!-- AI Chat Popup -->
-<div id="aiChatPopup" class="hidden">
-  <div class="header">
-    <span>AI Assistant</span>
-    <div>
-      <button id="clearChat">🗑 Clear</button>
-      <button id="closeChat">✖</button>
-    </div>
-  </div>
-  <div class="messages" id="chatMessages"></div>
-  <div class="input-area">
-    <input id="chatInput" type="text" placeholder="Type a message...">
-    <button class="send" id="sendChat">Send</button>
-  </div>
-</div>
-
 <!-- App Download Prompt -->
 <div id="appDownloadPrompt">
   <span>Install Trashcore App for better experience!</span>
@@ -162,14 +149,8 @@ body:not(.logged-in) .wave.wave2 { opacity:0.15; }
 let users = JSON.parse(localStorage.getItem('users')) || [];
 if(localStorage.getItem('loggedInUser')) enterApp(localStorage.getItem('loggedInUser'));
 
-function showLoginForm(){
-  document.getElementById('signupForm').classList.add('hidden');
-  document.getElementById('loginForm').classList.remove('hidden');
-}
-function showSignupForm(){
-  document.getElementById('loginForm').classList.add('hidden');
-  document.getElementById('signupForm').classList.remove('hidden');
-}
+function showLoginForm(){ document.getElementById('signupForm').classList.add('hidden'); document.getElementById('loginForm').classList.remove('hidden'); }
+function showSignupForm(){ document.getElementById('loginForm').classList.add('hidden'); document.getElementById('signupForm').classList.remove('hidden'); }
 
 function isValidUsername(name){ return /^[a-zA-Z0-9_]{3,15}$/.test(name); }
 function isValidPassword(pw){ return pw.length >= 6; }
@@ -254,76 +235,54 @@ document.getElementById("dismissAppBtn").addEventListener("click", () => { docum
 // Background Music Toggle
 const music = document.getElementById('bgMusic');
 const musicBtn = document.getElementById('musicBtn');
-musicBtn.addEventListener('click', () => {
-  if (music.muted) { music.muted = false; music.play(); musicBtn.textContent = '🔊 Music Playing'; } 
-  else { music.pause(); musicBtn.textContent = '🔇 Music Paused'; }
-});
+musicBtn.addEventListener('click', () => { if (music.muted) { music.muted=false; music.play(); musicBtn.textContent='🔊 Music Playing'; } else { music.pause(); musicBtn.textContent='🔇 Music Paused'; } });
 
 // Refresh & Exit Functions
 function refreshPage() { location.reload(); }
 function exitPage() { if (confirm("Are you sure you want to exit?")) { window.open('', '_self'); window.close(); } }
 
 // Service Worker registration
-if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').then(() => { console.log('Service Worker registered'); }); }
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').then(()=>{ console.log('Service Worker registered'); }); }
 
-// --- AI Chat Integration ---
-const chatBtn = document.getElementById('chatAI');
-const aiChat = document.getElementById('aiChatPopup');
-const closeChat = document.getElementById('closeChat');
-const clearChat = document.getElementById('clearChat');
-const sendChat = document.getElementById('sendChat');
-const chatMessages = document.getElementById('chatMessages');
-const chatInput = document.getElementById('chatInput');
+// --- Embedded AI Chat ---
+const embeddedChatInput = document.getElementById('embeddedChatInput');
+const embeddedChatSend = document.getElementById('embeddedChatSend');
+const embeddedChatMessages = document.getElementById('embeddedChatMessages');
 
-let chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
-chatHistory.forEach(msg => { addMessage(msg.sender, msg.text); });
-
-function addMessage(sender, text){
-  const div = document.createElement('div');
-  div.style.margin = '5px 0';
-  div.style.textAlign = sender==='user' ? 'right' : 'left';
-  div.textContent = (sender==='user' ? 'You: ' : 'AI: ') + text;
-  chatMessages.appendChild(div);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-// Open/Close AI Chat
-chatBtn.addEventListener('click', () => { aiChat.classList.toggle('hidden'); chatInput.focus(); });
-closeChat.addEventListener('click', () => { aiChat.classList.add('hidden'); });
-
-// Clear Chat
-clearChat.addEventListener('click', () => { chatMessages.innerHTML=''; localStorage.removeItem('chatHistory'); chatHistory=[]; });
-
-// Send message
-sendChat.addEventListener('click', async () => {
-  const msg = chatInput.value.trim();
+embeddedChatSend.addEventListener('click', async () => {
+  const msg = embeddedChatInput.value.trim();
   if(!msg) return;
-  addMessage('user', msg);
-  chatHistory.push({sender:'user', text:msg});
-  localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-  chatInput.value='';
-  
-  const typingMsg = document.createElement('div');
-  typingMsg.style.textAlign='left';
-  typingMsg.style.margin='5px 0';
-  typingMsg.textContent='AI: ...';
-  chatMessages.appendChild(typingMsg);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  const userDiv = document.createElement('div'); userDiv.className='user-msg'; userDiv.textContent=msg;
+  embeddedChatMessages.appendChild(userDiv);
+  embeddedChatInput.value=''; embeddedChatMessages.scrollTop = embeddedChatMessages.scrollHeight;
+
+  const aiDiv = document.createElement('div'); aiDiv.className='
+aiDiv.className='ai-msg'; aiDiv.textContent='...'; 
+  embeddedChatMessages.appendChild(aiDiv); 
+  embeddedChatMessages.scrollTop = embeddedChatMessages.scrollHeight;
 
   try {
-    const response = await fetch('/chat', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ message: msg }) });
+    const response = await fetch('/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg })
+    });
     const data = await response.json();
-    typingMsg.textContent = 'AI: ' + data.reply;
-    chatHistory.push({sender:'ai', text:data.reply});
-    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-  } catch(err) {
-    typingMsg.textContent='AI: Sorry, something went wrong.';
+    aiDiv.textContent = data.reply || 'AI: Sorry, no response.';
+  } catch (err) {
+    aiDiv.textContent = 'AI: Error. Try again.';
     console.error(err);
   }
+
+  embeddedChatMessages.scrollTop = embeddedChatMessages.scrollHeight;
 });
 
-// Enter key to send
-chatInput.addEventListener('keydown', e => { if(e.key==='Enter') sendChat.click(); });
+// Allow Enter key to send message
+embeddedChatInput.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') embeddedChatSend.click();
+});
 </script>
+
 </body>
 </html>

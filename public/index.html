@@ -34,6 +34,7 @@ h1 { color:red; margin-bottom:20px; }
   <button onclick="showSection('apk')"><i class="fa fa-file-download"></i> APK Downloads</button>
   <button onclick="showSection('music')"><i class="fa fa-music"></i> Music</button>
   <button onclick="showSection('chat')"><i class="fa fa-robot"></i> AI Chat</button>
+  <button onclick="showSection('projects')"><i class="fa fa-folder-open"></i> My Projects</button>
   <button onclick="installApp()"><i class="fa fa-download"></i> Install App</button>
 </div>
 
@@ -122,6 +123,18 @@ h1 { color:red; margin-bottom:20px; }
     <input type="text" id="chatInput" placeholder="Ask AI something...">
     <button onclick="sendMessage()" style="background:#FFD700; color:black;">Send</button>
   </div>
+
+  <!-- My Projects Section (colorful) -->
+  <div class="card section hidden" id="projectsSection">
+    <h2>My Projects</h2>
+    <a href="https://www.mediafire.com/file/exampleproject1" target="_blank" class="button" style="background:#4CAF50;">Project 1</a>
+    <a href="https://www.mediafire.com/file/exampleproject2" target="_blank" class="button" style="background:#FF5722;">Project 2</a>
+    <a href="https://www.mediafire.com/file/exampleproject3" target="_blank" class="button" style="background:#2196F3;">Project 3</a>
+    <a href="https://www.mediafire.com/file/exampleproject4" target="_blank" class="button" style="background:#9C27B0;">Project 4</a>
+    <a href="https://www.mediafire.com/file/exampleproject5" target="_blank" class="button" style="background:#FF9800;">Project 5</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
 </div>
 
 <script>

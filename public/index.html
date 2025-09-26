@@ -47,9 +47,6 @@ body:not(.logged-in) .wave.wave2 { opacity:0.15; }
 </head>
 <body>
 
-<audio id="bgMusic" src="https://files.catbox.moe/dqlb0t.mp3" muted autoplay loop></audio>
-<button id="musicBtn" style="position:fixed; bottom:20px; right:20px; padding:12px 18px; border:none; border-radius:8px; background:#32CD32; color:white; font-weight:bold; cursor:pointer; z-index:1000;">🔊 Play Music</button>
-
 <div class="wave-container">
   <div class="wave wave1"></div>
   <div class="wave wave2"></div>
@@ -74,20 +71,7 @@ body:not(.logged-in) .wave.wave2 { opacity:0.15; }
   <input type="password" id="loginPassword" placeholder="Password">
   <button onclick="login()" style="background:#32CD32; color:white;">Login</button>
   <button class="toggle-form" style="background:#FFA500; color:white;" onclick="showSignupForm()">Don't have an account? Sign Up</button>
-  <button class="toggle-form" style="background:#FFA500; color:white;" onclick="showForgotPasswordForm()">Forgot Password?</button>
-</div>
-
-<!-- Forgot Password Form -->
-<div class="form-container hidden" id="forgotPasswordForm">
-  <h1>Reset Password</h1>
-  <input type="email" id="resetEmail" placeholder="Enter your registered email">
-  <button onclick="sendVerificationCode()" style="background:#32CD32; color:white;">Send Verification Code</button>
-  <div id="verificationArea" class="hidden">
-    <input type="text" id="verificationCode" placeholder="Enter verification code">
-    <input type="password" id="newPassword" placeholder="Enter new password">
-    <button onclick="resetPassword()" style="background:#32CD32; color:white;">Reset Password</button>
-  </div>
-  <button class="toggle-form" style="background:#FFA500; color:white;" onclick="showLoginForm()">Back to Login</button>
+  <button onclick="resetPassword()" style="background:#FF4500; color:white;">Forgot Password?</button>
 </div>
 
 <!-- Hamburger Menu -->
@@ -115,7 +99,24 @@ body:not(.logged-in) .wave.wave2 { opacity:0.15; }
       <a href="http://t.me/Traschoreultra_bot" class="button telegram"><i class="fab fa-telegram-plane"></i> Server 2</a>
       <a href="https://t.me/theaccidentallygeniuses" class="button telegram"><i class="fab fa-telegram-plane"></i> Join Telegram group</a>
       <a href="https://whatsapp.com/channel/0029VafrbsKG8l5EFBDDCy41" class="button whatsapp"><i class="fab fa-whatsapp"></i> Join WhatsApp Channel</a>
+
+      <!-- Permanent AI Chat -->
+      <div id="aiChatSection" style="margin-top:20px; background:#222; padding:10px; border-radius:12px; color:white;">
+        <h3>AI Assistant</h3>
+        <div id="chatMessagesPermanent" style="height:200px; overflow-y:auto; border:1px solid #555; padding:8px; margin-bottom:8px;"></div>
+        <input id="chatInputPermanent" type="text" placeholder="Type a message..." style="width:calc(100% - 80px); padding:8px; border-radius:8px; border:none;">
+        <button id="sendChatPermanent" style="width:70px; padding:8px; margin-left:5px; border:none; border-radius:8px; background:#32CD32; color:white;">Send</button>
+      </div>
+
       <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Mediafire Card -->
+    <div class="card" id="mediafireCard">
+      <h2>Mediafire File Download</h2>
+      <input type="text" id="fileLink" placeholder="Paste Mediafire link here">
+      <button onclick="downloadFile()" style="background:#FF69B4; color:white;">Download</button>
+      <div id="downloadResult" style="margin-top:10px;"></div>
     </div>
 
   </div>
@@ -128,18 +129,11 @@ if(localStorage.getItem('loggedInUser')) enterApp(localStorage.getItem('loggedIn
 
 function showLoginForm(){
   document.getElementById('signupForm').classList.add('hidden');
-  document.getElementById('forgotPasswordForm').classList.add('hidden');
   document.getElementById('loginForm').classList.remove('hidden');
 }
 function showSignupForm(){
   document.getElementById('loginForm').classList.add('hidden');
-  document.getElementById('forgotPasswordForm').classList.add('hidden');
   document.getElementById('signupForm').classList.remove('hidden');
-}
-function showForgotPasswordForm(){
-  document.getElementById('loginForm').classList.add('hidden');
-  document.getElementById('signupForm').classList.add('hidden');
-  document.getElementById('forgotPasswordForm').classList.remove('hidden');
 }
 
 function isValidUsername(name){ return /^[a-zA-Z0-9_]{3,15}$/.test(name); }
@@ -152,8 +146,7 @@ function signup(){
   if(!username||!email||!password){ alert('Fill all fields'); return; }
   if(!isValidUsername(username)){ alert('Invalid username'); return; }
   if(!isValidPassword(password)){ alert('Password must be at least 6 characters'); return; }
-  if(users.find(u=>u.username===username)){ alert('Username already exists'); return; }
-  if(users.find(u=>u.email===email)){ alert('Email already exists'); return; }
+  if(users.find(u=>u.username===username || u.email===email)){ alert('Username or Email already used'); return; }
   users.push({username,email,password});
   localStorage.setItem('users', JSON.stringify(users));
   alert('Account created! Please login.');
@@ -173,10 +166,8 @@ function enterApp(user){
   document.body.classList.add('logged-in');
   document.getElementById('signupForm').classList.add('hidden');
   document.getElementById('loginForm').classList.add('hidden');
-  document.getElementById('forgotPasswordForm').classList.add('hidden');
   document.getElementById('mainContent').classList.remove('hidden');
   document.getElementById('menu').style.display="block";
-  const music=document.getElementById('bgMusic'); if(music) music.play().catch(e=>console.log("Autoplay blocked",e));
 }
 
 function logout(){
@@ -184,7 +175,23 @@ function logout(){
   document.body.classList.remove('logged-in');
   document.getElementById('mainContent').classList.add('hidden');
   document.getElementById('menu').style.display="none";
-  showLoginForm();
+  showSignupForm();
+}
+
+function resetPassword(){
+  const email = prompt("Enter your registered email:");
+  const user = users.find(u=>u.email===email);
+  if(!user){ alert("Email not found."); return; }
+  const code = Math.floor(100000 + Math.random()*900000);
+  alert(`Verification code sent to email: ${code} (Simulated)`); // Replace with email API
+  const inputCode = prompt("Enter the verification code sent to your email:");
+  if(inputCode==code){
+    const newPass = prompt("Enter new password (min 6 chars):");
+    if(!isValidPassword(newPass)){ alert("Password too short."); return; }
+    user.password = newPass;
+    localStorage.setItem('users', JSON.stringify(users));
+    alert("Password reset successful!");
+  } else { alert("Incorrect code."); }
 }
 
 // Hamburger Menu
@@ -193,43 +200,60 @@ const dropdown=document.getElementById('dropdownMenu');
 menuBtn.addEventListener('click',()=>{ dropdown.classList.toggle('show'); menuBtn.classList.toggle('open'); });
 window.addEventListener('click', e=>{ if(!e.target.matches('.menu-btn')&&!e.target.matches('.menu-btn *')){ dropdown.classList.remove('show'); menuBtn.classList.remove('open'); } });
 
-// Password Reset
-let tempVerificationCode = null;
-function sendVerificationCode(){
-  const email = document.getElementById('resetEmail').value.trim();
-  const user = users.find(u => u.email === email);
-  if(!user){ alert('Email not registered'); return; }
-  tempVerificationCode = Math.floor(100000 + Math.random() * 900000);
-  console.log(`Verification code for ${email}: ${tempVerificationCode}`);
-  alert(`A verification code has been sent to ${email} (check console for demo)`);
-  document.getElementById('verificationArea').classList.remove('hidden');
+// Mediafire Download
+function downloadFile(){
+  const link = document.getElementById('fileLink').value.trim();
+  const resultDiv = document.getElementById('downloadResult');
+  if (!link) { alert('Enter Mediafire link'); return; }
+  resultDiv.innerHTML = `<a href="${link}" target="_blank" class="button" style="background:#FF69B4;">Click here to download</a>`;
 }
 
-function resetPassword(){
-  const code = document.getElementById('verificationCode').value.trim();
-  const newPass = document.getElementById('newPassword').value;
-  const email = document.getElementById('resetEmail').value.trim();
-  if(code != tempVerificationCode){ alert('Incorrect verification code'); return; }
-  if(!isValidPassword(newPass)){ alert('Password must be at least 6 characters'); return; }
-  const user = users.find(u => u.email === email);
-  user.password = newPass;
-  localStorage.setItem('users', JSON.stringify(users));
-  alert('Password successfully reset! You can now login with your new password.');
-  tempVerificationCode = null;
-  showLoginForm();
-}
+// Permanent AI Chat
+const chatMessagesPermanent = document.getElementById('chatMessagesPermanent');
+const chatInputPermanent = document.getElementById('chatInputPermanent');
+const sendChatPermanent = document.getElementById('sendChatPermanent');
+
+sendChatPermanent.addEventListener('click', async () => {
+  const msg = chatInputPermanent.value.trim();
+  if (!msg) return;
+
+  const userMsg = document.createElement('div');
+  userMsg.style.textAlign = 'right';
+  userMsg.style.margin = '5px 0';
+  userMsg.textContent = "You: " + msg;
+  chatMessagesPermanent.appendChild(userMsg);
+
+  chatInputPermanent.value = '';
+  chatMessagesPermanent.scrollTop = chatMessagesPermanent.scrollHeight;
+
+  const typingMsg = document.createElement('div');
+  typingMsg.style.textAlign = 'left';
+  typingMsg.style.margin = '5px 0';
+  typingMsg.textContent = "AI: ...";
+  chatMessagesPermanent.appendChild(typingMsg);
+  chatMessagesPermanent.scrollTop = chatMessagesPermanent.scrollHeight;
+
+  try {
+    const response = await fetch('/api/chat.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg })
+    });
+    const data = await response.json();
+    typingMsg.textContent = "AI: " + data.reply;
+  } catch (err) {
+    typingMsg.textContent = "AI: Sorry, something went wrong.";
+    console.error(err);
+  }
+
+  chatMessagesPermanent.scrollTop = chatMessagesPermanent.scrollHeight;
+});
+
+chatInputPermanent.addEventListener('keydown', (e) => { if(e.key==='Enter') sendChatPermanent.click(); });
 
 // Refresh & Exit Functions
 function refreshPage() { location.reload(); }
 function exitPage() { if (confirm("Are you sure you want to exit?")) { window.open('', '_self'); window.close(); } }
-
-// Background Music Toggle
-const music = document.getElementById('bgMusic');
-const musicBtn = document.getElementById('musicBtn');
-musicBtn.addEventListener('click', () => {
-  if (music.muted) { music.muted=false; music.play(); musicBtn.textContent='🔊 Music Playing'; }
-  else { music.pause(); musicBtn.textContent='🔇 Music Paused'; }
-});
 </script>
 </body>
 </html>

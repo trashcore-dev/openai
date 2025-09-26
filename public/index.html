@@ -19,30 +19,8 @@ button:hover { opacity:0.9; }
 h1 { color:red; margin-bottom:20px; }
 .logout-btn { background-color:#FF4500; margin-top:15px; }
 .logout-btn:hover { background-color:#e03e00; }
-
-/* Responsive Menu */
-.menu {
-  background:#222;
-  padding:12px;
-  display:flex;
-  flex-wrap: wrap;          /* wrap items if screen too small */
-  justify-content: center;  /* center each row */
-  gap: 8px;                 /* space between buttons */
-  color:white;
-}
-.menu button {
-  background:none;
-  border:none;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-  flex: 1 1 auto;           /* allow growth/shrink */
-  min-width: 120px;         /* minimum button width */
-  text-align: center;
-  margin: 4px;
-}
-
-/* Service buttons with icons */
+.menu { background:#222; padding:12px; display:flex; flex-wrap: wrap; justify-content:center; gap:8px; color:white; }
+.menu button { background:none; border:none; color:white; font-size:16px; cursor:pointer; flex:1 1 120px; min-width:120px; }
 .button { display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none; text-align:left; }
 .button img { height:24px; width:24px; margin-right:10px; vertical-align:middle; }
 </style>
@@ -53,9 +31,10 @@ h1 { color:red; margin-bottom:20px; }
 <div class="menu hidden" id="menuBar">
   <button onclick="showSection('services')"><i class="fa fa-cogs"></i> Services</button>
   <button onclick="showSection('pterodactyl')"><i class="fa fa-server"></i> Pterodactyl</button>
-  <button onclick="showSection('apk')"><i class="fa fa-download"></i> APK Downloads</button>
+  <button onclick="showSection('apk')"><i class="fa fa-file-download"></i> APK Downloads</button>
   <button onclick="showSection('music')"><i class="fa fa-music"></i> Music</button>
   <button onclick="showSection('chat')"><i class="fa fa-robot"></i> AI Chat</button>
+  <button onclick="installApp()"><i class="fa fa-download"></i> Install App</button>
 </div>
 
 <!-- Sign Up Form -->
@@ -121,10 +100,10 @@ h1 { color:red; margin-bottom:20px; }
 
   <!-- APK Downloads Section -->
   <div class="card section hidden" id="apkSection">
-    <h2>APK DOWNLOADS</h2>
-    <a href="YOUR_WHATSAPP_BETA_LINK" target="_blank" class="button" style="background:#25D366;">WhatsApp Beta APK</a>
-    <a href="YOUR_WHATSAPP_BUSINESS_LINK" target="_blank" class="button" style="background:#128C7E;">WhatsApp Business Beta APK</a>
-    <a href="YOUR_CRICIFY_LINK" target="_blank" class="button" style="background:#FF4500;">Cricify App</a>
+    <h2>APK Downloads</h2>
+    <a href="YOUR_MEDIAFIRE_LINK_WHATSAPP_BETA" target="_blank" class="button" style="background:#4CAF50;">WhatsApp Beta APK</a>
+    <a href="YOUR_MEDIAFIRE_LINK_WABETA" target="_blank" class="button" style="background:#FF5722;">WhatsApp Business Beta APK</a>
+    <a href="YOUR_MEDIAFIRE_LINK_CRICIFY" target="_blank" class="button" style="background:#2196F3;">Cricify App</a>
   </div>
 
   <!-- Music Player -->
@@ -198,6 +177,7 @@ function login(){
   const user=users.find(u=>u.username===username && u.phone===phone && u.password===password);
   if(user){ localStorage.setItem('loggedInUser', username); enterApp(username); } else alert('Invalid credentials');
 }
+
 function enterApp(user){
   document.body.classList.add('logged-in');
   document.getElementById('signupForm').classList.add('hidden');
@@ -207,6 +187,7 @@ function enterApp(user){
   document.getElementById('menuBar').classList.remove('hidden');
   showSection('services');
 }
+
 function logout(){
   localStorage.removeItem('loggedInUser');
   document.body.classList.remove('logged-in');
@@ -215,13 +196,13 @@ function logout(){
   showSignupForm();
 }
 
-// --- Sections ---
+// Sections
 function showSection(section){
   document.querySelectorAll(".section").forEach(s=>s.classList.add("hidden"));
   document.getElementById(section+"Section").classList.remove("hidden");
 }
 
-// --- AI Chat Room ---
+// AI Chat
 async function sendMessage(){
   const input=document.getElementById("chatInput");
   const msg=input.value.trim();
@@ -239,7 +220,7 @@ async function sendMessage(){
   chat.scrollTop=chat.scrollHeight;
 }
 
-// --- PWA Install Prompt ---
+// PWA Install Prompt
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trashcore Service</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="manifest" href="manifest.json">
 <style>
 body { font-family: Arial, sans-serif; margin:0; padding:0; text-align:center; transition: background 0.5s ease; }
 body.logged-in { background:#000; color:white; }
@@ -18,9 +19,19 @@ button:hover { opacity:0.9; }
 h1 { color:red; margin-bottom:20px; }
 .logout-btn { background-color:#FF4500; margin-top:15px; }
 .logout-btn:hover { background-color:#e03e00; }
+.menu { background:#222; padding:12px; display:flex; justify-content:space-around; color:white; }
+.menu button { background:none; border:none; color:white; font-size:16px; cursor:pointer; }
 </style>
 </head>
 <body>
+
+<!-- Menu -->
+<div class="menu hidden" id="menuBar">
+  <button onclick="showSection('services')"><i class="fa fa-cogs"></i> Services</button>
+  <button onclick="showSection('music')"><i class="fa fa-music"></i> Music</button>
+  <button onclick="showSection('chat')"><i class="fa fa-robot"></i> AI Chat</button>
+  <button onclick="installApp()"><i class="fa fa-download"></i> Install App</button>
+</div>
 
 <!-- Sign Up Form -->
 <div class="form-container" id="signupForm">
@@ -54,15 +65,26 @@ h1 { color:red; margin-bottom:20px; }
 <!-- Main Content -->
 <div class="card-container hidden" id="mainContent">
   <h1>TRASHCORE SITE</h1>
-  <div class="card">
+
+  <!-- Services Section -->
+  <div class="card section" id="servicesSection">
     <h2>MY SERVICES</h2>
     <a href="https://t.me/TrashcoreBot" class="button" style="background:#00BFFF; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">Telegram Bot</a>
     <a href="https://whatsapp.com/channel/0029VafrbsKG8l5EFBDDCy41" class="button" style="background:#32CD32; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">WhatsApp Channel</a>
     <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 
-  <!-- AI Chat as Separate Room -->
-  <div class="card">
+  <!-- Music Player -->
+  <div class="card section hidden" id="musicSection">
+    <h2>Music Player</h2>
+    <audio id="musicPlayer" controls>
+      <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+      Your browser does not support audio.
+    </audio>
+  </div>
+
+  <!-- AI Chat -->
+  <div class="card section hidden" id="chatSection">
     <h2>AI Chat Room</h2>
     <div id="chatMessages" style="height:200px; overflow-y:auto; border:1px solid #333; padding:10px; background:#222; color:white; text-align:left;"></div>
     <input type="text" id="chatInput" placeholder="Ask AI something...">
@@ -73,6 +95,7 @@ h1 { color:red; margin-bottom:20px; }
 <script>
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let currentOTP = null;
+let deferredPrompt;
 if(localStorage.getItem('loggedInUser')) enterApp(localStorage.getItem('loggedInUser'));
 
 function isValidUsername(name){ return /^[a-zA-Z0-9_]{3,15}$/.test(name); }
@@ -140,12 +163,21 @@ function enterApp(user){
   document.getElementById('loginForm').classList.add('hidden');
   document.getElementById('otpForm').classList.add('hidden');
   document.getElementById('mainContent').classList.remove('hidden');
+  document.getElementById('menuBar').classList.remove('hidden');
+  showSection('services');
 }
 function logout(){
   localStorage.removeItem('loggedInUser');
   document.body.classList.remove('logged-in');
   document.getElementById('mainContent').classList.add('hidden');
+  document.getElementById('menuBar').classList.add('hidden');
   showSignupForm();
+}
+
+// --- Sections ---
+function showSection(section){
+  document.querySelectorAll(".section").forEach(s=>s.classList.add("hidden"));
+  document.getElementById(section+"Section").classList.remove("hidden");
 }
 
 // --- AI Chat Room ---
@@ -164,6 +196,21 @@ async function sendMessage(){
     chat.innerHTML += `<div style="text-align:left;">AI: Error connecting.</div>`;
   }
   chat.scrollTop=chat.scrollHeight;
+}
+
+// --- PWA Install Prompt ---
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+function installApp(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choice) => {
+      if(choice.outcome === 'accepted'){ alert("App installed!"); }
+      deferredPrompt = null;
+    });
+  } else { alert("App already installed or not supported."); }
 }
 </script>
 </body>

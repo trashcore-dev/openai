@@ -35,6 +35,7 @@ h1 { color:red; margin-bottom:20px; }
   <button onclick="showSection('music')"><i class="fa fa-music"></i> Music</button>
   <button onclick="showSection('chat')"><i class="fa fa-robot"></i> AI Chat</button>
   <button onclick="showSection('projects')"><i class="fa fa-folder-open"></i> My Projects</button>
+  <button onclick="showSection('tutorials')"><i class="fa fa-graduation-cap"></i> Tutorials</button>
   <button onclick="installApp()"><i class="fa fa-download"></i> Install App</button>
 </div>
 
@@ -124,7 +125,7 @@ h1 { color:red; margin-bottom:20px; }
     <button onclick="sendMessage()" style="background:#FFD700; color:black;">Send</button>
   </div>
 
-  <!-- My Projects Section (colorful) -->
+  <!-- My Projects Section -->
   <div class="card section hidden" id="projectsSection">
     <h2>My Projects</h2>
     <a href="https://www.mediafire.com/file/exampleproject1" target="_blank" class="button" style="background:#4CAF50;">Project 1</a>
@@ -132,6 +133,16 @@ h1 { color:red; margin-bottom:20px; }
     <a href="https://www.mediafire.com/file/exampleproject3" target="_blank" class="button" style="background:#2196F3;">Project 3</a>
     <a href="https://www.mediafire.com/file/exampleproject4" target="_blank" class="button" style="background:#9C27B0;">Project 4</a>
     <a href="https://www.mediafire.com/file/exampleproject5" target="_blank" class="button" style="background:#FF9800;">Project 5</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Tutorials Section -->
+  <div class="card section hidden" id="tutorialsSection">
+    <h2>YouTube Tutorials</h2>
+    <a href="https://www.youtube.com/watch?v=VIDEO_ID_1" target="_blank" class="button" style="background:#FF5722;">Tutorial 1: Setting up Trashcore Bot</a>
+    <a href="https://www.youtube.com/watch?v=VIDEO_ID_2" target="_blank" class="button" style="background:#4CAF50;">Tutorial 2: Deploying on Heroku</a>
+    <a href="https://www.youtube.com/watch?v=VIDEO_ID_3" target="_blank" class="button" style="background:#2196F3;">Tutorial 3: Using AI Chat</a>
+    <a href="https://www.youtube.com/watch?v=VIDEO_ID_4" target="_blank" class="button" style="background:#9C27B0;">Tutorial 4: Music Player Integration</a>
     <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 

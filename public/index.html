@@ -37,6 +37,10 @@ h1 { color:red; margin-bottom:20px; }
   <button onclick="showSection('projects')"><i class="fa fa-folder-open"></i> My Projects</button>
   <button onclick="showSection('tutorials')"><i class="fa fa-graduation-cap"></i> Tutorials</button>
   <button onclick="installApp()"><i class="fa fa-download"></i> Install App</button>
+  <button onclick="refreshPage()"><i class="fa fa-sync-alt"></i> Refresh</button>
+  <button onclick="goPrevious()"><i class="fa fa-arrow-left"></i> Previous Menu</button>
+  <button onclick="goNext()"><i class="fa fa-arrow-right"></i> Next Menu</button>
+  <button onclick="exitPage()"><i class="fa fa-sign-out-alt"></i> Exit</button>
 </div>
 
 <!-- Sign Up Form -->
@@ -220,11 +224,36 @@ function logout(){
   showSignupForm();
 }
 
-// Sections
+// Sections with navigation tracking
+let sectionHistory = [];
+let currentSectionIndex = -1;
+
 function showSection(section){
   document.querySelectorAll(".section").forEach(s=>s.classList.add("hidden"));
   document.getElementById(section+"Section").classList.remove("hidden");
+
+  if(currentSectionIndex === -1 || sectionHistory[currentSectionIndex] !== section){
+    sectionHistory = sectionHistory.slice(0, currentSectionIndex + 1);
+    sectionHistory.push(section);
+    currentSectionIndex = sectionHistory.length - 1;
+  }
 }
+
+// Navigation Functions
+function refreshPage(){ location.reload(); }
+function goPrevious(){
+  if(currentSectionIndex > 0){
+    currentSectionIndex--;
+    showSection(sectionHistory[currentSectionIndex]);
+  } else { alert("No previous menu."); }
+}
+function goNext(){
+  if(currentSectionIndex < sectionHistory.length - 1){
+    currentSectionIndex++;
+    showSection(sectionHistory[currentSectionIndex]);
+  } else { alert("No next menu."); }
+}
+function exitPage(){ if(confirm("Are you sure you want to exit?")) window.close(); }
 
 // AI Chat
 async function sendMessage(){

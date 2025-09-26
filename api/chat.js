@@ -1,3 +1,4 @@
+// File: api/chat.js
 import OpenAI from "openai";
 
 export default async function handler(req, res) {
@@ -11,14 +12,15 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Initialize OpenAI client with your API key from Vercel environment
     const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
+      apiKey: process.env.OPENAI_API_KEY,
     });
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [{ role: "user", content: message }],
-      max_tokens: 200
+      max_tokens: 200,
     });
 
     const reply = completion.choices[0].message.content;

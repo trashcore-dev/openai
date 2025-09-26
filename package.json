@@ -1,0 +1,24 @@
+{
+  "name": "trashcore-ai-server",
+  "version": "1.0.0",
+  "description": "Trashcore AI server with chat functionality using OpenAI API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": ["trashcore", "AI", "OpenAI", "chatbot", "express"],
+  "author": "Trashcore Devs",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "openai": "^4.23.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

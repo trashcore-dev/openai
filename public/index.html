@@ -1,217 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trashcore Service</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="manifest" href="manifest.json">
-<style>
-body { font-family: Arial, sans-serif; margin:0; padding:0; text-align:center; transition: background 0.5s ease; }
-body.logged-in { background:#000; color:white; }
-body:not(.logged-in) { background: linear-gradient(135deg, #FF4D4D 0%, #B3B3B3 100%); color:white; }
-.hidden { display:none; }
-.form-container, .card-container, .card { background:#1E90FF; padding:30px; border-radius:16px; margin:20px auto; max-width:450px; color:white; }
-body.logged-in .card, body.logged-in .card-container { background:#111; }
-input, button { width:90%; padding:12px; margin:8px 0; border-radius:8px; border:none; }
-button { font-weight:bold; cursor:pointer; transition:0.3s; }
-button:hover { opacity:0.9; }
-h1 { color:red; margin-bottom:20px; }
-.logout-btn { background-color:#FF4500; margin-top:15px; }
-.logout-btn:hover { background-color:#e03e00; }
-.menu { background:#222; padding:12px; display:flex; justify-content:space-around; color:white; }
-.menu button { background:none; border:none; color:white; font-size:16px; cursor:pointer; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trashcore Service</title>
+  <link rel="manifest" href="/manifest.json">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+    header { background: black; color: white; padding: 15px; text-align: center; }
+    .container { padding: 20px; }
+    .hidden { display: none; }
+    button { padding: 8px 14px; margin: 5px; cursor: pointer; }
+    input { padding: 8px; margin: 5px; width: 100%; max-width: 300px; }
+    .menu { background: #222; color: white; padding: 10px; display: flex; gap: 15px; justify-content: center; }
+    .menu button { background: #444; color: white; border: none; border-radius: 5px; }
+    #chatBox, #chatMessagesRoom {
+      border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: auto; background: #fff;
+    }
+    .userMsg { text-align: right; margin: 5px; }
+    .botMsg { text-align: left; margin: 5px; }
+    #appDownloadPrompt {
+      position: fixed; bottom: 20px; left: 20px; background: white; padding: 15px;
+      border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); display: none;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Trashcore Service</h1>
+  </header>
 
-<!-- Menu -->
-<div class="menu hidden" id="menuBar">
-  <button onclick="showSection('services')"><i class="fa fa-cogs"></i> Services</button>
-  <button onclick="showSection('music')"><i class="fa fa-music"></i> Music</button>
-  <button onclick="showSection('chat')"><i class="fa fa-robot"></i> AI Chat</button>
-  <button onclick="installApp()"><i class="fa fa-download"></i> Install App</button>
-</div>
-
-<!-- Sign Up Form -->
-<div class="form-container" id="signupForm">
-  <h1>Sign Up</h1>
-  <input type="text" id="signupUsername" placeholder="Username (3-15 chars)">
-  <input type="text" id="signupPhone" placeholder="Phone Number">
-  <input type="password" id="signupPassword" placeholder="Password (min 6 chars)">
-  <button onclick="signup()" style="background:#32CD32; color:white;">Create Account</button>
-  <button onclick="showLoginForm()" style="background:#FFA500; color:white;">Already have an account? Login</button>
-</div>
-
-<!-- OTP Verification -->
-<div class="form-container hidden" id="otpForm">
-  <h1>Verify OTP</h1>
-  <p id="otpDisplay" style="font-size:18px; font-weight:bold; background:#fff; color:#000; padding:10px; border-radius:8px; cursor:pointer;" onclick="copyOTP()"></p>
-  <input type="text" id="otpInput" placeholder="Enter OTP">
-  <button onclick="verifyOTP()" style="background:#32CD32; color:white;">Verify</button>
-  <button onclick="resendOTP()" style="background:#FFA500; color:white; margin-top:10px;">Resend OTP</button>
-</div>
-
-<!-- Login Form -->
-<div class="form-container hidden" id="loginForm">
-  <h1>Login</h1>
-  <input type="text" id="loginUsername" placeholder="Username">
-  <input type="text" id="loginPhone" placeholder="Phone Number">
-  <input type="password" id="loginPassword" placeholder="Password">
-  <button onclick="login()" style="background:#32CD32; color:white;">Login</button>
-  <button onclick="showSignupForm()" style="background:#FFA500; color:white;">Don't have an account? Sign Up</button>
-</div>
-
-<!-- Main Content -->
-<div class="card-container hidden" id="mainContent">
-  <h1>TRASHCORE SITE</h1>
-
-  <!-- Services Section -->
-  <div class="card section" id="servicesSection">
-    <h2>MY SERVICES</h2>
-    <a href="https://t.me/TrashcoreBot" class="button" style="background:#00BFFF; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">Telegram Bot</a>
-    <a href="https://whatsapp.com/channel/0029VafrbsKG8l5EFBDDCy41" class="button" style="background:#32CD32; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">WhatsApp Channel</a>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+  <!-- SIGNUP PAGE -->
+  <div id="signupPage" class="container">
+    <h2>Sign Up</h2>
+    <input type="text" id="username" placeholder="Username"><br>
+    <input type="tel" id="phone" placeholder="Phone Number"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="signUp()">Sign Up</button>
+    <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+    <div id="otpSection" class="hidden">
+      <p>Enter OTP sent to your phone:</p>
+      <input type="text" id="otpInput" placeholder="Enter OTP"><br>
+      <button onclick="verifyOTP()">Verify OTP</button>
+      <button onclick="resendOTP()">Resend OTP</button>
+      <button onclick="copyOTP()">Copy OTP</button>
+      <button onclick="pasteOTP()">Paste OTP</button>
+      <p id="otpDisplay"></p>
+    </div>
   </div>
 
-  <!-- Music Player -->
-  <div class="card section hidden" id="musicSection">
-    <h2>Music Player</h2>
-    <audio id="musicPlayer" controls>
-      <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-      Your browser does not support audio.
-    </audio>
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="container hidden">
+    <h2>Login</h2>
+    <input type="tel" id="loginPhone" placeholder="Phone Number"><br>
+    <input type="password" id="loginPassword" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
   </div>
 
-  <!-- AI Chat -->
-  <div class="card section hidden" id="chatSection">
-    <h2>AI Chat Room</h2>
-    <div id="chatMessages" style="height:200px; overflow-y:auto; border:1px solid #333; padding:10px; background:#222; color:white; text-align:left;"></div>
-    <input type="text" id="chatInput" placeholder="Ask AI something...">
-    <button onclick="sendMessage()" style="background:#FFD700; color:black;">Send</button>
+  <!-- MAIN APP -->
+  <div id="mainApp" class="hidden">
+    <div class="menu">
+      <button onclick="showSection('chatRoom')">AI Chat</button>
+      <button onclick="showSection('musicRoom')">Music</button>
+    </div>
+
+    <div class="container">
+      <!-- AI CHAT ROOM -->
+      <div id="chatRoom" class="hidden">
+        <h2>AI Chat Room</h2>
+        <div id="chatBox"></div>
+        <input type="text" id="chatInput" placeholder="Ask something...">
+        <button onclick="sendMessage()">Send</button>
+      </div>
+
+      <!-- MUSIC ROOM -->
+      <div id="musicRoom" class="hidden">
+        <h2>Music Search</h2>
+        <input type="text" id="musicQuery" placeholder="Enter song name...">
+        <button onclick="searchMusic()">Search</button>
+        <div id="musicResults"></div>
+      </div>
+    </div>
   </div>
-</div>
+
+  <!-- INSTALL APP PROMPT -->
+  <div id="appDownloadPrompt">
+    <p>Install Trashcore App?</p>
+    <button id="downloadAppBtn">Download App</button>
+    <button id="dismissAppBtn">Dismiss</button>
+  </div>
 
 <script>
-let users = JSON.parse(localStorage.getItem('users')) || [];
-let currentOTP = null;
-let deferredPrompt;
-if(localStorage.getItem('loggedInUser')) enterApp(localStorage.getItem('loggedInUser'));
+let users = JSON.parse(localStorage.getItem("users")) || [];
+let currentUser = null;
+let generatedOTP = null;
 
-function isValidUsername(name){ return /^[a-zA-Z0-9_]{3,15}$/.test(name); }
-function isValidPassword(pw){ return pw.length >= 6; }
+// ==== AUTH LOGIC ====
+function signUp() {
+  const username = document.getElementById("username").value;
+  const phone = document.getElementById("phone").value;
+  const password = document.getElementById("password").value;
 
-function showLoginForm(){
-  document.getElementById('signupForm').classList.add('hidden');
-  document.getElementById('loginForm').classList.remove('hidden');
-}
-function showSignupForm(){
-  document.getElementById('loginForm').classList.add('hidden');
-  document.getElementById('signupForm').classList.remove('hidden');
-}
+  if (!username || !phone || !password) return alert("Fill all fields!");
+  if (users.find(u => u.phone === phone)) return alert("Phone already registered!");
 
-function signup(){
-  const username=document.getElementById('signupUsername').value.trim();
-  const phone=document.getElementById('signupPhone').value.trim();
-  const password=document.getElementById('signupPassword').value;
-  if(!username||!phone||!password){ alert('Fill all fields'); return; }
-  if(!isValidUsername(username)){ alert('Invalid username'); return; }
-  if(!isValidPassword(password)){ alert('Password too short'); return; }
-  if(users.find(u=>u.username===username)){ alert('Username already exists'); return; }
-  localStorage.setItem("pendingUser", JSON.stringify({username, phone, password}));
-  document.getElementById("signupForm").classList.add("hidden");
-  document.getElementById("otpForm").classList.remove("hidden");
-  generateOTP();
+  generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+  document.getElementById("otpDisplay").innerText = "Your OTP: " + generatedOTP;
+  document.getElementById("otpSection").classList.remove("hidden");
+
+  localStorage.setItem("tempUser", JSON.stringify({ username, phone, password }));
 }
 
-function generateOTP() {
-  currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
-  document.getElementById("otpDisplay").textContent = "Your OTP: " + currentOTP + " (tap to copy)";
-}
-function copyOTP() {
-  if (!currentOTP) return;
-  navigator.clipboard.writeText(currentOTP).then(()=>alert("OTP copied!"));
-}
-function resendOTP() {
-  generateOTP();
-  alert("A new OTP has been generated.");
-}
 function verifyOTP() {
-  const entered=document.getElementById("otpInput").value.trim();
-  if(entered===currentOTP){
-    const pending=JSON.parse(localStorage.getItem("pendingUser"));
-    users.push(pending);
+  const otpInput = document.getElementById("otpInput").value;
+  if (otpInput === generatedOTP) {
+    const tempUser = JSON.parse(localStorage.getItem("tempUser"));
+    users.push(tempUser);
     localStorage.setItem("users", JSON.stringify(users));
-    localStorage.removeItem("pendingUser");
-    alert("OTP verified! You can login now.");
-    document.getElementById("otpForm").classList.add("hidden");
-    document.getElementById("loginForm").classList.remove("hidden");
-  } else { alert("Invalid OTP"); }
-}
-
-function login(){
-  const username=document.getElementById('loginUsername').value.trim();
-  const phone=document.getElementById('loginPhone').value.trim();
-  const password=document.getElementById('loginPassword').value;
-  const user=users.find(u=>u.username===username && u.phone===phone && u.password===password);
-  if(user){ localStorage.setItem('loggedInUser', username); enterApp(username); }
-  else alert('Invalid credentials');
-}
-function enterApp(user){
-  document.body.classList.add('logged-in');
-  document.getElementById('signupForm').classList.add('hidden');
-  document.getElementById('loginForm').classList.add('hidden');
-  document.getElementById('otpForm').classList.add('hidden');
-  document.getElementById('mainContent').classList.remove('hidden');
-  document.getElementById('menuBar').classList.remove('hidden');
-  showSection('services');
-}
-function logout(){
-  localStorage.removeItem('loggedInUser');
-  document.body.classList.remove('logged-in');
-  document.getElementById('mainContent').classList.add('hidden');
-  document.getElementById('menuBar').classList.add('hidden');
-  showSignupForm();
-}
-
-// --- Sections ---
-function showSection(section){
-  document.querySelectorAll(".section").forEach(s=>s.classList.add("hidden"));
-  document.getElementById(section+"Section").classList.remove("hidden");
-}
-
-// --- AI Chat Room ---
-async function sendMessage(){
-  const input=document.getElementById("chatInput");
-  const msg=input.value.trim();
-  if(!msg) return;
-  const chat=document.getElementById("chatMessages");
-  chat.innerHTML += `<div style="text-align:right;">You: ${msg}</div>`;
-  input.value="";
-  try{
-    const res=await fetch("/chat",{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg})});
-    const data=await res.json();
-    chat.innerHTML += `<div style="text-align:left;">AI: ${data.reply}</div>`;
-  }catch(err){
-    chat.innerHTML += `<div style="text-align:left;">AI: Error connecting.</div>`;
+    alert("Signup successful!");
+    showLogin();
+  } else {
+    alert("Invalid OTP!");
   }
-  chat.scrollTop=chat.scrollHeight;
 }
 
-// --- PWA Install Prompt ---
-window.addEventListener('beforeinstallprompt', (e) => {
+function resendOTP() {
+  generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+  document.getElementById("otpDisplay").innerText = "Your new OTP: " + generatedOTP;
+}
+
+function copyOTP() {
+  navigator.clipboard.writeText(generatedOTP);
+  alert("OTP copied!");
+}
+
+function pasteOTP() {
+  navigator.clipboard.readText().then(text => {
+    document.getElementById("otpInput").value = text;
+  });
+}
+
+function showLogin() {
+  document.getElementById("signupPage").classList.add("hidden");
+  document.getElementById("loginPage").classList.remove("hidden");
+}
+
+function login() {
+  const phone = document.getElementById("loginPhone").value;
+  const password = document.getElementById("loginPassword").value;
+  const user = users.find(u => u.phone === phone && u.password === password);
+
+  if (user) {
+    currentUser = user;
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("mainApp").classList.remove("hidden");
+  } else {
+    alert("Invalid login credentials!");
+  }
+}
+
+// ==== MENU LOGIC ====
+function showSection(section) {
+  document.getElementById("chatRoom").classList.add("hidden");
+  document.getElementById("musicRoom").classList.add("hidden");
+  document.getElementById(section).classList.remove("hidden");
+}
+
+// ==== AI CHAT (REAL BACKEND CALL) ====
+async function sendMessage() {
+  const input = document.getElementById("chatInput");
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  const box = document.getElementById("chatBox");
+  box.innerHTML += `<div class="userMsg">You: ${msg}</div>`;
+  input.value = "";
+
+  try {
+    const res = await fetch("/api/chat.js", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: msg })
+    });
+    const data = await res.json();
+    const reply = data.reply || "No response.";
+    box.innerHTML += `<div class="botMsg">Bot: ${reply}</div>`;
+    box.scrollTop = box.scrollHeight;
+  } catch (err) {
+    console.error("Chat error:", err);
+    box.innerHTML += `<div class="botMsg">Bot: Error connecting to AI.</div>`;
+  }
+}
+
+// ==== MUSIC SEARCH (YOUTUBE DOWNLOADER API) ====
+async function searchMusic() {
+  const query = document.getElementById("musicQuery").value.trim();
+  if (!query) return alert("Enter a song name!");
+  const resultsDiv = document.getElementById("musicResults");
+  resultsDiv.innerHTML = "<p>Searching...</p>";
+
+  // Here you would call a real API to search YouTube
+  // Example: using izumiiiiiii downloader
+  const dummyVideo = {
+    title: "Sample Song",
+    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  };
+
+  resultsDiv.innerHTML = `
+    <p>${dummyVideo.title}</p>
+    <audio controls src="https://izumiiiiiiii.dpdns.org/downloader/youtube?url=${encodeURIComponent(dummyVideo.url)}&format=mp3"></audio><br>
+    <a href="https://izumiiiiiiii.dpdns.org/downloader/youtube?url=${encodeURIComponent(dummyVideo.url)}&format=mp3" download>Download MP3</a>
+  `;
+}
+
+// ==== INSTALL PROMPT ====
+let deferredPrompt;
+const appPrompt = document.getElementById("appDownloadPrompt");
+const downloadBtn = document.getElementById("downloadAppBtn");
+const dismissBtn = document.getElementById("dismissAppBtn");
+
+window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
+  appPrompt.style.display = "block";
 });
-function installApp(){
-  if(deferredPrompt){
+
+downloadBtn.addEventListener("click", async () => {
+  if (deferredPrompt) {
     deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choice) => {
-      if(choice.outcome === 'accepted'){ alert("App installed!"); }
-      deferredPrompt = null;
-    });
-  } else { alert("App already installed or not supported."); }
-}
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome !== "accepted") {
+      window.location.href = "/TrashcoreApp.apk"; 
+    }
+    deferredPrompt = null;
+  } else {
+    window.location.href = "/TrashcoreApp.apk";
+  }
+});
+
+dismissBtn.addEventListener("click", () => {
+  appPrompt.style.display = "none";
+});
 </script>
 </body>
 </html>

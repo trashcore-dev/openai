@@ -28,6 +28,7 @@ h1 { color:red; margin-bottom:20px; }
 <!-- Menu -->
 <div class="menu hidden" id="menuBar">
   <button onclick="showSection('services')"><i class="fa fa-cogs"></i> Services</button>
+  <button onclick="showSection('pterodactyl')"><i class="fa fa-server"></i> Pterodactyl</button>
   <button onclick="showSection('music')"><i class="fa fa-music"></i> Music</button>
   <button onclick="showSection('chat')"><i class="fa fa-robot"></i> AI Chat</button>
   <button onclick="installApp()"><i class="fa fa-download"></i> Install App</button>
@@ -70,7 +71,6 @@ h1 { color:red; margin-bottom:20px; }
   <div class="card section" id="servicesSection">
     <h2>OUR OPTIONS</h2>
 
-    <!-- Existing Services -->
     <a href="https://t.me/TrashcoreBot" class="button" style="background:#00BFFF; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">
       Telegram pairing (Server 1)
     </a>
@@ -81,21 +81,34 @@ h1 { color:red; margin-bottom:20px; }
       WhatsApp Channel
     </a>
 
-    <!-- New Services -->
     <a href="https://github.com/Tennor-modz/trashcore-system/fork" target="_blank" class="button" style="background:#24292F; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">
       Fork GitHub Repo
     </a>
-
     <a href="https://trashcore-pairing-zaht.onrender.com/pair" target="_blank" class="button" style="background:#006400; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">
       Scan Session ID (WhatsApp Bot)
     </a>
-
     <a href="https://dashboard.heroku.com/new?template=https://github.com/Tennor-modz/trashcore-system" target="_blank" class="button" style="background:#7952B3; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">
       Deploy Bot on Heroku
     </a>
-
     <a href="https://youtube.com/@giddytennor?si=05A1VyQ3HZuhldzv?sub_confirmation=1" target="_blank" class="button" style="background:#FF0000; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">
       Subscribe to YouTube Channel
+    </a>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Pterodactyl Services Section -->
+  <div class="card section hidden" id="pterodactylSection">
+    <h2>PTERODACTYL SERVICES</h2>
+
+    <a href="https://panel.example.com/server1" target="_blank" class="button" style="background:#FF8C00; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">
+      Pterodactyl Server 1
+    </a>
+    <a href="https://panel.example.com/server2" target="_blank" class="button" style="background:#FF4500; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">
+      Pterodactyl Server 2
+    </a>
+    <a href="https://panel.example.com/server3" target="_blank" class="button" style="background:#FF1493; display:block; margin:10px; padding:12px; color:white; border-radius:8px; text-decoration:none;">
+      Pterodactyl Server 3
     </a>
 
     <button class="logout-btn" onclick="logout()">Logout</button>

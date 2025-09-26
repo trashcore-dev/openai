@@ -26,7 +26,12 @@ h1 { color:red; margin-bottom:20px; }
 <body>
 
 <!-- Menu -->
-
+<div class="menu hidden" id="menuBar">
+  <button onclick="showSection('services')"><i class="fa fa-cogs"></i> Services</button>
+  <button onclick="showSection('music')"><i class="fa fa-music"></i> Music</button>
+  <button onclick="showSection('chat')"><i class="fa fa-robot"></i> AI Chat</button>
+  <button onclick="installApp()"><i class="fa fa-download"></i> Install App</button>
+</div>
 
 <!-- Sign Up Form -->
 <div class="form-container" id="signupForm">

@@ -148,7 +148,63 @@ h1 { color:red; margin-bottom:20px; }
     <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 
-  <!-- Other sections (unchanged)... -->
+  <!-- Pterodactyl Section -->
+  <div class="card section hidden" id="pterodactylSection">
+    <h2>PTERODACTYL SITES FOR TRASHCORE BOT</h2>
+    <a href="https://daki.cc/" target="_blank" class="button" style="background-color: #6a4c9c; display: flex; align-items: center; gap: 8px;">
+      <img src="https://daki.cc/logo.png" alt="Daki Hosting Logo"> Daki Hosting
+    </a>
+    <a href="https://optiklink.com/" target="_blank" class="button" style="background-color: #e60000; display: flex; align-items: center; gap: 8px;">
+      <img src="https://optiklink.com/logo.png" alt="OptikLink Logo"> OptikLink Hosting
+    </a>
+    <a href="https://bot-hosting.net/" target="_blank" class="button" style="background-color: #4CAF50; display: flex; align-items: center; gap: 8px;">
+      <img src="https://bot-hosting.net/logo.png" alt="Bot Hosting Net Logo"> Bot Hosting Net
+    </a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- APK Downloads Section -->
+  <div class="card section hidden" id="apkSection">
+    <h2>APK Downloads</h2>
+    <a href="https://www.mediafire.com/file/qekodulyrk1q6w0/WhatsApp_Messenger_2.25.27.6_beta.apkm/file" target="_blank" class="button" style="background:#4CAF50;">WhatsApp Beta APK</a>
+    <a href="https://www.mediafire.com/file/cmopdy14azugoqa/WhatsApp_Business_2.25.27.2_beta.apkm/file" target="_blank" class="button" style="background:#FF5722;">WhatsApp Business Beta APK</a>
+    <a href="https://www.mediafire.com/file/x161p20z37jtcbm/CRICFy_v5.3.apk/file" target="_blank" class="button" style="background:#2196F3;">Cricify App</a>
+  </div>
+
+  <!-- Music Section -->
+  <div class="card section hidden" id="musicSection">
+    <h2>Music Player</h2>
+    <audio id="musicPlayer" controls>
+      <source src="https://files.catbox.moe/2uq914.mp3" type="audio/mpeg">
+      Your browser does not support audio.
+    </audio>
+  </div>
+
+  <!-- AI Chat Section -->
+  <div class="card section hidden" id="chatSection">
+    <h2>AI Chat Room</h2>
+    <div id="chatMessages" style="height:200px; overflow-y:auto; border:1px solid #333; padding:10px; background:#222; color:white; text-align:left;"></div>
+    <input type="text" id="chatInput" placeholder="Ask AI something...">
+    <button onclick="sendMessage()" style="background:#FFD700; color:black;">Send</button>
+  </div>
+
+  <!-- My Projects Section -->
+  <div class="card section hidden" id="projectsSection">
+    <h2>My Projects</h2>
+    <a href="https://www.mediafire.com/file/exampleproject1" target="_blank" class="button" style="background:#4CAF50;">TRASHCORE INVASION (incomplete)</a>
+    <a href="https://www.mediafire.com/file/23g3coxpi5igaka/trashcore-system-main%25282%2529.zip/file" target="_blank" class="button" style="background:#FF5722;">TRASHCORE-MD</a>
+    <a href="https://www.mediafire.com/file/6rxvcqcui06pnnx/telegram_bot_base_%25281%2529.zip/file" target="_blank" class="button" style="background:#2196F3;">TELEXWA BASE</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Tutorials Section -->
+  <div class="card section hidden" id="tutorialsSection">
+    <h2>YouTube Tutorials</h2>
+    <a href="https://youtu.be/uBFuIX1G4Nw?si=3HtWLRzKlIGmJO8h" target="_blank" class="button" style="background:#FF5722;">Tutorial 1: Setting up Trashcore Bot</a>
+    <a href="https://youtu.be/ga76Hfx03y0?si=mYwUQpcIkKvjVx3p" target="_blank" class="button" style="background:#4CAF50;">Tutorial 2: How to run telexwa base</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+  
 </div>
 
 <script>

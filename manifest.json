@@ -1,21 +1,21 @@
 {
   "name": "Trashcore Web",
   "short_name": "Trashcore",
-  "description": "All-in-one hub for Trashcore WhatsApp bots and services.",
+  "description": "EAT, CODE, BOT — All-in-one hub for Trashcore services.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#e8f5e9",
   "theme_color": "#7e57c2",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "https://files.catbox.moe/z3r33o.jpg",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/jpeg"
     },
     {
-      "src": "/icon-512.png",
+      "src": "https://files.catbox.moe/z3r33o.jpg",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/jpeg"
     }
   ]
 }

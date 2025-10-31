@@ -4,8 +4,7 @@ const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png'
+  '/https://files.catbox.moe/z3r33o.jpg'
 ];
 
 self.addEventListener('install', (event) => {

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <meta name="theme-color" content="#7e57c2" />
   <style>
-    /* ===== PURPLE LOGIN/REGISTER SCREEN ===== */
+    /* ===== LIGHT LOGIN/REGISTER SCREEN (ORIGINAL STYLE) ===== */
     * {
       margin: 0;
       padding: 0;
@@ -18,7 +18,7 @@
     }
 
     body {
-      background: #f5f3ff;
+      background: #f5f3ff; /* ✅ Light purple background for login */
       color: #333;
       min-height: 100vh;
       display: flex;
@@ -137,13 +137,18 @@
       margin-top: 8px;
     }
 
-    /* ===== MAIN APP STYLES ===== */
+    /* ===== MAIN APP: DARK BY DEFAULT ===== */
     #mainApp {
       display: none;
       width: 100%;
     }
 
-    /* ... Rest of your original CSS (unchanged) ... */
+    body.dark-mode {
+      background: #121212;
+      color: #f0f0f0;
+    }
+
+    /* Rest of main app styles (dark-compatible) */
     .typing-container {
       text-align: center;
       margin-bottom: 20px;
@@ -154,7 +159,6 @@
       margin-bottom: 30px;
       font-size: 1.3rem;
       color: #2e7d32;
-      font-weight: 600;
     }
 
     body.dark-mode .greeting {
@@ -408,20 +412,12 @@
       color: #81c784;
     }
 
-    .comment-form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 25px;
-    }
-
     .comment-form input,
     .comment-form textarea {
       width: 100%;
       padding: 12px;
       border: 1px solid #ddd;
       border-radius: 10px;
-      font-family: inherit;
       background: white;
       color: #333;
     }
@@ -431,11 +427,6 @@
       background: #2a2a2a;
       color: #f0f0f0;
       border-color: #444;
-    }
-
-    .comment-form textarea {
-      resize: vertical;
-      min-height: 100px;
     }
 
     .comment-form button {
@@ -449,21 +440,9 @@
       transition: background 0.2s;
     }
 
-    .comment-form button:hover {
-      background: #388e3c;
-    }
-
     body.dark-mode .comment-form button {
       background: #81c784;
       color: #121212;
-    }
-
-    body.dark-mode .comment-form button:hover {
-      background: #a5d6a7;
-    }
-
-    .comments-list {
-      margin-top: 25px;
     }
 
     .comment-item {
@@ -472,7 +451,6 @@
       border-radius: 10px;
       margin-bottom: 12px;
       border-left: 4px solid #7e57c2;
-      position: relative;
     }
 
     body.dark-mode .comment-item {
@@ -481,10 +459,6 @@
     }
 
     .comment-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 6px;
-      font-weight: 600;
       color: #555;
     }
 
@@ -492,32 +466,16 @@
       color: #e0e0e0;
     }
 
-    .delete-btn {
-      background: none;
-      border: none;
-      color: #e53935;
-      cursor: pointer;
-      font-size: 1.1rem;
-      opacity: 0.7;
-      transition: opacity 0.2s;
-    }
-
-    .delete-btn:hover {
-      opacity: 1;
-    }
-
-    .comment-text {
-      margin-bottom: 6px;
-      line-height: 1.5;
-    }
-
     .comment-meta {
-      font-size: 0.85rem;
       color: #777;
     }
 
     body.dark-mode .comment-meta {
       color: #aaa;
+    }
+
+    .delete-btn {
+      color: #e53935;
     }
 
     @media (max-width: 600px) {
@@ -543,7 +501,7 @@
   </style>
 </head>
 <body>
-  <!-- Purple Login/Signup Screen -->
+  <!-- ✅ LIGHT-THEMED LOGIN SCREEN (WORKING AS BEFORE) -->
   <div id="loginScreen" class="login-container">
     <h1>✨ Trashcore Access</h1>
     <p>Sign in or create an account to unlock all features.</p>
@@ -560,7 +518,6 @@
     <div class="divider"><span>or</span></div>
 
     <div id="authFormContainer">
-      <!-- Login Form -->
       <form id="loginForm" class="email-form">
         <h3>Sign In</h3>
         <input type="email" placeholder="Email" required />
@@ -570,7 +527,6 @@
         <a href="#" id="showSignup">Create account</a>
       </form>
 
-      <!-- Sign Up Form -->
       <form id="signupForm" class="email-form" style="display:none;">
         <h3>Create Account</h3>
         <input type="email" placeholder="Email" required />
@@ -579,7 +535,6 @@
         <a href="#" id="showLogin">Already have an account? Sign in</a>
       </form>
 
-      <!-- Forgot Password Form -->
       <form id="forgotForm" class="email-form" style="display:none;">
         <h3>Reset Password</h3>
         <input type="email" placeholder="Enter your email" required />
@@ -589,7 +544,7 @@
     </div>
   </div>
 
-  <!-- Main App -->
+  <!-- Main App (dark after login) -->
   <div id="mainApp">
     <div class="top-controls">
       <button class="install-btn" id="installBtn" style="display:none;">
@@ -695,7 +650,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
   <script>
-    // 🔥 YOUR FIREBASE CONFIG
     const firebaseConfig = {
       apiKey: "AIzaSyDhK2_nBKnzh9FK5yQYfXhl4RlOY53gjhI",
       authDomain: "trashcoreweb-1b84a.firebaseapp.com",
@@ -719,93 +673,21 @@
     const googleLogin = document.getElementById('googleLogin');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // Toggle forms
-    document.getElementById('showSignup').addEventListener('click', e => {
-      e.preventDefault();
-      loginForm.style.display = 'none';
-      signupForm.style.display = 'block';
-    });
-    document.getElementById('showLogin').addEventListener('click', e => {
-      e.preventDefault();
-      signupForm.style.display = 'none';
-      loginForm.style.display = 'block';
-    });
-    document.getElementById('showForgot').addEventListener('click', e => {
-      e.preventDefault();
-      loginForm.style.display = 'none';
-      forgotForm.style.display = 'block';
-    });
-    document.getElementById('backToLogin').addEventListener('click', e => {
-      e.preventDefault();
-      forgotForm.style.display = 'none';
-      loginForm.style.display = 'block';
-    });
+    // Form toggles
+    document.getElementById('showSignup').addEventListener('click', e => { e.preventDefault(); loginForm.style.display = 'none'; signupForm.style.display = 'block'; });
+    document.getElementById('showLogin').addEventListener('click', e => { e.preventDefault(); signupForm.style.display = 'none'; loginForm.style.display = 'block'; });
+    document.getElementById('showForgot').addEventListener('click', e => { e.preventDefault(); loginForm.style.display = 'none'; forgotForm.style.display = 'block'; });
+    document.getElementById('backToLogin').addEventListener('click', e => { e.preventDefault(); forgotForm.style.display = 'none'; loginForm.style.display = 'block'; });
 
-    // Login
-    loginForm.addEventListener('submit', async e => {
-      e.preventDefault();
-      const email = e.target.querySelector('input[type="email"]').value;
-      const password = e.target.querySelector('input[type="password"]').value;
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
-      } catch (err) {
-        alert('Login failed: ' + err.message);
-      }
-    });
+    // Auth handlers
+    loginForm.addEventListener('submit', async e => { e.preventDefault(); try { await auth.signInWithEmailAndPassword(e.target.querySelector('input[type="email"]').value, e.target.querySelector('input[type="password"]').value); } catch (err) { alert('Login failed: ' + err.message); } });
+    signupForm.addEventListener('submit', async e => { e.preventDefault(); try { await auth.createUserWithEmailAndPassword(e.target.querySelector('input[type="email"]').value, e.target.querySelector('input[type="password"]').value); alert('Account created! Welcome to Trashcore 🎉'); } catch (err) { alert('Sign-up failed: ' + err.message); } });
+    forgotForm.addEventListener('submit', async e => { e.preventDefault(); try { await auth.sendPasswordResetEmail(e.target.querySelector('input[type="email"]').value); alert('Password reset email sent! Check your inbox.'); forgotForm.style.display = 'none'; loginForm.style.display = 'block'; } catch (err) { alert('Reset failed: ' + err.message); } });
 
-    // Sign Up
-    signupForm.addEventListener('submit', async e => {
-      e.preventDefault();
-      const email = e.target.querySelector('input[type="email"]').value;
-      const password = e.target.querySelector('input[type="password"]').value;
-      try {
-        await auth.createUserWithEmailAndPassword(email, password);
-        alert('Account created! Welcome to Trashcore 🎉');
-      } catch (err) {
-        alert('Sign-up failed: ' + err.message);
-      }
-    });
+    githubLogin.addEventListener('click', async () => { try { await auth.signInWithPopup(new firebase.auth.GithubAuthProvider()); } catch (err) { alert('GitHub login failed: ' + err.message); } });
+    googleLogin.addEventListener('click', async () => { try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } catch (err) { alert('Google login failed: ' + err.message); } });
+    logoutBtn.addEventListener('click', () => auth.signOut());
 
-    // Forgot Password
-    forgotForm.addEventListener('submit', async e => {
-      e.preventDefault();
-      const email = e.target.querySelector('input[type="email"]').value;
-      try {
-        await auth.sendPasswordResetEmail(email);
-        alert('Password reset email sent! Check your inbox.');
-        forgotForm.style.display = 'none';
-        loginForm.style.display = 'block';
-      } catch (err) {
-        alert('Reset failed: ' + err.message);
-      }
-    });
-
-    // GitHub
-    githubLogin.addEventListener('click', async () => {
-      const provider = new firebase.auth.GithubAuthProvider();
-      try {
-        await auth.signInWithPopup(provider);
-      } catch (err) {
-        alert('GitHub login failed: ' + err.message);
-      }
-    });
-
-    // Google
-    googleLogin.addEventListener('click', async () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      try {
-        await auth.signInWithPopup(provider);
-      } catch (err) {
-        alert('Google login failed: ' + err.message);
-      }
-    });
-
-    // Logout
-    logoutBtn.addEventListener('click', () => {
-      auth.signOut();
-    });
-
-    // Auth state listener
     auth.onAuthStateChanged(user => {
       if (user) {
         loginScreen.style.display = 'none';
@@ -817,35 +699,20 @@
       }
     });
 
-    // === MAIN APP INIT ===
     function initMainApp() {
       // PWA Install
       let deferredPrompt;
       const installBtn = document.getElementById('installBtn');
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installBtn.style.display = 'flex';
-      });
-      if (installBtn) {
-        installBtn.addEventListener('click', async () => {
-          if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt = null;
-            installBtn.style.display = 'none';
-          }
-        });
-      }
+      window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; installBtn.style.display = 'flex'; });
+      if (installBtn) installBtn.addEventListener('click', async () => { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; installBtn.style.display = 'none'; } });
 
       // Theme: DARK MODE BY DEFAULT AFTER LOGIN
       const themeToggle = document.getElementById('themeToggle');
       const body = document.body;
-
       if (!localStorage.getItem('theme')) {
         body.classList.add('dark-mode');
         localStorage.setItem('theme', 'dark');
       }
-
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark') {
         body.classList.add('dark-mode');
@@ -854,25 +721,18 @@
         body.classList.remove('dark-mode');
         themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
       }
-
       themeToggle.addEventListener('click', () => {
         body.classList.toggle('dark-mode');
         const isDark = body.classList.contains('dark-mode');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        themeToggle.innerHTML = isDark 
-          ? '<i class="fas fa-sun"></i>' 
-          : '<i class="fas fa-moon"></i>';
+        themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
       });
 
       // Menu Toggle
       const menuToggle = document.getElementById('menuToggle');
       const menuItems = document.getElementById('menuItems');
       menuToggle.addEventListener('click', () => menuItems.classList.toggle('show'));
-      document.addEventListener('click', (e) => {
-        if (!menuToggle.contains(e.target) && !menuItems.contains(e.target)) {
-          menuItems.classList.remove('show');
-        }
-      });
+      document.addEventListener('click', e => { if (!menuToggle.contains(e.target) && !menuItems.contains(e.target)) menuItems.classList.remove('show'); });
 
       // Comments System
       const commentForm = document.getElementById('commentForm');
@@ -880,29 +740,15 @@
       const COMMENTS_KEY = 'trashcoreComments';
       function getSessionId() {
         let id = sessionStorage.getItem('sessionId');
-        if (!id) {
-          id = 'sess_' + Date.now() + Math.random().toString(36).substr(2, 9);
-          sessionStorage.setItem('sessionId', id);
-        }
+        if (!id) { id = 'sess_' + Date.now() + Math.random().toString(36).substr(2, 9); sessionStorage.setItem('sessionId', id); }
         return id;
       }
       function formatTime(date) {
-        return new Intl.DateTimeFormat('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          month: 'short',
-          day: 'numeric'
-        }).format(date);
+        return new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }).format(date);
       }
       function saveComment(username, text) {
         const comments = JSON.parse(localStorage.getItem(COMMENTS_KEY) || '[]');
-        const newComment = {
-          id: Date.now(),
-          username: username.trim(),
-          text: text.trim(),
-          timestamp: new Date().toISOString(),
-          sessionId: getSessionId()
-        };
+        const newComment = { id: Date.now(), username: username.trim(), text: text.trim(), timestamp: new Date().toISOString(), sessionId: getSessionId() };
         comments.unshift(newComment);
         localStorage.setItem(COMMENTS_KEY, JSON.stringify(comments));
         renderComments();
@@ -937,13 +783,10 @@
           commentsList.appendChild(div);
         });
         document.querySelectorAll('.delete-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            const id = e.target.dataset.id;
-            if (confirm('Delete this comment?')) deleteComment(id);
-          });
+          btn.addEventListener('click', e => { const id = e.target.dataset.id; if (confirm('Delete this comment?')) deleteComment(id); });
         });
       }
-      commentForm.addEventListener('submit', (e) => {
+      commentForm.addEventListener('submit', e => {
         e.preventDefault();
         const username = document.getElementById('username').value;
         const text = document.getElementById('commentText').value;
@@ -956,7 +799,6 @@
     }
   </script>
 
-  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

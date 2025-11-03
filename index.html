@@ -26,12 +26,15 @@
       position: relative;
     }
 
+    body.has-telegram-banner {
+      padding-top: 60px;
+    }
+
     body.dark-mode {
       background: #121212;
       color: #f0f0f0;
     }
 
-    /* Star background canvas */
     #starsCanvas {
       position: fixed;
       top: 0;
@@ -40,6 +43,47 @@
       height: 100%;
       z-index: -1;
       pointer-events: none;
+    }
+
+    /* Telegram Banner */
+    #telegramBanner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #2e7d32, #4caf50);
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      font-weight: 600;
+      z-index: 10000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #telegramBanner a {
+      background: white;
+      color: #2e7d32;
+      padding: 6px 14px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-left: 10px;
+      font-size: 0.95rem;
+    }
+
+    #remindLaterBtn {
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
     }
 
     .header-container {
@@ -119,29 +163,31 @@
     }
 
     .menu-items {
-      position: absolute;
-      top: 60px;
-      right: 0;
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%) scale(0.95);
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      width: 240px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 260px;
       opacity: 0;
       visibility: hidden;
-      transform: translateY(-10px);
-      transition: all 0.3s ease;
-      padding: 12px 0;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      padding: 14px 0;
+      z-index: 9999;
+      border: 1px solid rgba(0,0,0,0.05);
     }
 
     body.dark-mode .menu-items {
       background: #1e1e1e;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
 
     .menu-items.show {
       opacity: 1;
       visibility: visible;
-      transform: translateY(0);
+      transform: translateY(-50%) scale(1);
     }
 
     .menu-items a {
@@ -201,29 +247,51 @@
       display: block;
     }
 
-    /* Card Grid Layout - 2-column format on all devices with rectangular cards */
+    /* === SQUARE CARDS IN SINGLE COLUMN === */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
+      grid-template-columns: 1fr;
+      gap: 28px;
       margin-bottom: 60px;
-      max-width: 1200px; /* Increased max width */
+      max-width: 600px;
       margin-left: auto;
       margin-right: auto;
+      padding: 0 10px;
     }
 
     .card {
       background: white;
-      border-radius: 20px; /* Increased border radius */
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.12); /* Enhanced shadow */
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       position: relative;
       z-index: 1;
-      height: 100%;
-      min-width: 180px; /* Increased minimum width */
       display: flex;
       flex-direction: column;
+      aspect-ratio: 1 / 1;
+      width: 100%;
+    }
+
+    /* Fallback for older browsers */
+    @supports not (aspect-ratio: 1) {
+      .card {
+        position: relative;
+      }
+      .card::before {
+        content: "";
+        display: block;
+        padding-top: 100%;
+      }
+      .card > * {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+      }
     }
 
     body.dark-mode .card {
@@ -233,36 +301,39 @@
     }
 
     .card:hover {
-      transform: translateY(-10px); /* Increased lift effect */
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2); /* Enhanced hover shadow */
+      transform: translateY(-8px);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.25);
       z-index: 10;
     }
 
     body.dark-mode .card:hover {
-      box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.45);
     }
 
     .card-header {
-      height: 100px; /* Adjusted header height for rectangular format */
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 2.2rem; /* Larger icon size */
+      font-size: 2.4rem;
       font-weight: bold;
+      flex: 1;
+      padding: 16px;
     }
 
     .card-body {
-      padding: 25px; /* Increased padding */
-      flex-grow: 1;
+      padding: 20px;
+      flex: 2;
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      text-align: center;
     }
 
     .card-body h2 {
-      margin-bottom: 15px; /* More spacing */
+      margin-bottom: 12px;
       color: #2d3748;
-      font-size: 1.4rem; /* Larger title */
+      font-size: 1.35rem;
     }
 
     body.dark-mode .card-body h2 {
@@ -271,9 +342,9 @@
 
     .card-body p {
       color: #718096;
-      line-height: 1.6; /* Better readability */
-      margin-bottom: 25px; /* More spacing before button */
-      font-size: 1rem; /* Larger text */
+      line-height: 1.5;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
       flex-grow: 1;
     }
 
@@ -281,24 +352,23 @@
       color: #b0b0b0;
     }
 
-    /* CTA Button styling - larger buttons with better mobile visibility */
     .cta-button {
       display: inline-block;
-      padding: 14px 28px; /* Increased padding */
+      padding: 12px 24px;
       background: #7e57c2;
       color: white;
       text-decoration: none;
-      border-radius: 10px; /* Slightly rounded corners */
-      font-weight: 700; /* Bold text */
+      border-radius: 10px;
+      font-weight: 700;
       text-align: center;
       transition: all 0.2s ease;
       margin-top: auto;
-      font-size: 1.1rem; /* Larger font size */
+      font-size: 1.05rem;
       box-shadow: 0 4px 12px rgba(126, 87, 194, 0.4);
       position: relative;
       overflow: hidden;
       z-index: 2;
-      min-height: 50px;
+      min-height: 46px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -306,7 +376,7 @@
 
     .cta-button:hover {
       background: #6a4aad;
-      transform: translateY(-3px); /* More pronounced hover effect */
+      transform: translateY(-3px);
       box-shadow: 0 6px 16px rgba(126, 87, 194, 0.5);
     }
     
@@ -323,19 +393,20 @@
       box-shadow: 0 6px 16px rgba(186, 104, 200, 0.5);
     }
 
-    /* Purple Gradients - enhanced */
     .card-1 .card-header { background: linear-gradient(135deg, #b39ddb, #7e57c2); }
     .card-2 .card-header { background: linear-gradient(135deg, #9575cd, #5e35b1); }
     .card-3 .card-header { background: linear-gradient(135deg, #d1c4e9, #9575cd); }
     .card-4 .card-header { background: linear-gradient(135deg, #8e24aa, #ab47bc); }
+    .card-5 .card-header { background: linear-gradient(135deg, #ff7043, #e64a19); }
+    .card-6 .card-header { background: linear-gradient(135deg, #4fc3f7, #0288d1); }
 
     /* Stats Section */
     .stats-container {
       display: flex;
       justify-content: center;
-      gap: 30px;
+      gap: 25px;
       margin: 40px auto;
-      max-width: 800px;
+      max-width: 900px;
       background: white;
       padding: 20px;
       border-radius: 16px;
@@ -351,11 +422,11 @@
 
     .stat-item {
       text-align: center;
-      min-width: 140px;
+      min-width: 130px;
     }
 
     .stat-value {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       font-weight: 700;
       color: #2e7d32;
       margin-bottom: 5px;
@@ -374,150 +445,115 @@
       color: #aaa;
     }
 
-    /* Responsive adjustments for mobile - enhanced for better button visibility */
-    @media (max-width: 768px) {
-      .cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-      }
-      
-      .card {
-        min-width: 150px;
-        border-radius: 18px;
-      }
-      
-      .card-header {
-        height: 80px;
-        font-size: 1.8rem;
-      }
-      
-      .card-body {
-        padding: 20px;
-      }
-      
-      .card-body h2 {
-        font-size: 1.2rem;
-      }
-      
-      .card-body p {
-        font-size: 0.95rem;
-        margin-bottom: 20px;
-      }
-      
-      .cta-button {
-        padding: 12px 20px;
-        font-size: 1rem;
-        border-radius: 8px;
-        min-height: 45px;
-      }
+    .github-stats .stat-value {
+      font-size: 1.45rem;
     }
-    
-    /* Extra small mobile devices */
+    .github-stats .cta-button {
+      margin-top: 12px;
+      font-size: 0.95rem;
+      padding: 8px 16px;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(102, 102, 102, 0.3);
+    }
+    body.dark-mode .github-stats .cta-button {
+      background: #5a32a3;
+      box-shadow: 0 4px 10px rgba(120, 80, 180, 0.4);
+    }
+    body.dark-mode .github-stats .cta-button:hover {
+      background: #6a4aad;
+      box-shadow: 0 6px 14px rgba(120, 80, 180, 0.5);
+    }
+
     @media (max-width: 480px) {
       .container {
         margin-top: 120px;
         padding: 0 15px;
       }
-      
       .top-controls {
         top: 10px;
         right: 10px;
         gap: 8px;
       }
-      
       .app-title {
         font-size: 1.8rem;
       }
-      
       .greeting {
         font-size: 1rem;
         padding: 0 5px;
       }
-      
       .menu-items {
         width: 200px;
       }
-      
       .banner-image {
         max-width: 100%;
         margin: 20px auto;
       }
-      
       .cards-grid {
-        gap: 15px;
+        gap: 24px;
+        max-width: 95%;
       }
-      
-      .card {
-        min-width: 140px;
-        border-radius: 16px;
-      }
-      
       .card-header {
-        height: 70px;
-        font-size: 1.6rem;
+        font-size: 2.1rem;
+        padding: 12px;
       }
-      
       .card-body {
-        padding: 15px;
+        padding: 16px;
       }
-      
       .card-body h2 {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
       }
-      
       .card-body p {
         font-size: 0.9rem;
-        margin-bottom: 15px;
       }
-      
       .cta-button {
-        padding: 10px 15px;
-        font-size: 0.95rem;
-        border-radius: 7px;
-        min-height: 40px;
-        width: 100%;
-        margin-top: 10px;
+        padding: 11px 18px;
+        font-size: 1rem;
+        min-height: 44px;
       }
-      
       .stats-container {
         gap: 15px;
         padding: 15px;
         flex-direction: column;
       }
-      
       .stat-item {
         min-width: 100%;
       }
-      
       .stat-value {
         font-size: 1.5rem;
       }
+      #telegramBanner {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+      }
+      #telegramBanner a, #remindLaterBtn {
+        padding: 5px 12px;
+        font-size: 0.85rem;
+      }
     }
     
-    /* Ensure buttons are always visible on mobile with touch-friendly size */
     @media (hover: none) {
       .cta-button {
-        padding: 16px 24px;
-        min-height: 55px;
+        padding: 14px 22px;
+        min-height: 50px;
         font-size: 1.05rem;
-      }
-      
-      .card {
-        margin-bottom: 10px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Stars Background Canvas -->
+  <!-- Telegram Banner -->
+  <div id="telegramBanner">
+    <span>📢 Join our Telegram channel for updates & support!</span>
+    <a href="https://t.me/trashcoresystem" target="_blank">Join Now</a>
+    <button id="remindLaterBtn">Remind Me Later</button>
+  </div>
+
   <canvas id="starsCanvas"></canvas>
 
-  <!-- Hidden Audio Player -->
   <audio class="background-music" id="backgroundMusic" loop>
     <source src="https://files.catbox.moe/yw3got.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Top Right Controls -->
   <div class="top-controls">
     <button class="install-btn" id="installBtn" style="display:none;">
       <i class="fas fa-download"></i>
@@ -530,7 +566,6 @@
     </div>
   </div>
 
-  <!-- Menu -->
   <div class="menu-items" id="menuItems">
     <a href="mailto:trashcoreclient@gmail.com">
       <i class="fas fa-envelope"></i> Contact Us
@@ -552,7 +587,6 @@
     </a>
   </div>
 
-  <!-- Main Content -->
   <div class="container">
     <div class="header-container">
       <div class="app-title">Trashcore site: All-in-One Bot Hub</div>
@@ -561,19 +595,17 @@
       </div>
     </div>
 
-    <!-- Banner Image -->
     <div class="banner-image">
       <img src="https://files.catbox.moe/z3r33o.jpg" alt="Trashcore Banner">
     </div>
 
-    <!-- Cards Grid - 2-column format on all devices with rectangular cards -->
     <div class="cards-grid">
       <!-- Card 1: Host -->
       <div class="card card-1">
         <div class="card-header">🚀</div>
         <div class="card-body">
           <h2>Trashcore MD</h2>
-          <p>Deploy your WhatsApp bot 24/7 on Heroku, Daki, or Bot Hosting.</p>
+          <p>Deploy on Heroku, Daki, OptiLink, or Bot Hosting. Scan Session ID.</p>
           <a href="https://www.trashcorehost.zone.id/" target="_blank" class="cta-button">Explore</a>
         </div>
       </div>
@@ -583,7 +615,7 @@
         <div class="card-header">⚡</div>
         <div class="card-body">
           <h2>Trashcore Ultra</h2>
-          <p>Advanced WhatsApp bot with AI features and premium tools.</p>
+          <p>Fork, Star, Deploy on Heroku, Cypher X, OptiLink & more.</p>
           <a href="https://www.trashcore-ultra.zone.id/" target="_blank" class="cta-button">Explore</a>
         </div>
       </div>
@@ -607,6 +639,36 @@
           <a href="https://www.trashcoreservice.zone.id/" target="_blank" class="cta-button">View Plans</a>
         </div>
       </div>
+
+      <!-- Card 5: YouTube Tutorials -->
+      <div class="card card-5">
+        <div class="card-header">🎥</div>
+        <div class="card-body">
+          <h2>YouTube Tutorials</h2>
+          <p>Step-by-step setup & deployment guides.</p>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px; width: 100%;">
+            <a href="https://youtube.com/@giddytennor" target="_blank" class="cta-button" style="font-size:0.95rem; padding:10px;">Watch</a>
+            <a href="https://youtube.com/@giddytennor" target="_blank" class="cta-button" style="font-size:0.95rem; padding:10px;">Watch</a>
+            <a href="https://youtube.com/@giddytennor" target="_blank" class="cta-button" style="font-size:0.95rem; padding:10px;">Watch</a>
+            <a href="https://youtube.com/@giddytennor" target="_blank" class="cta-button" style="font-size:0.95rem; padding:10px;">Watch</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6: APK Downloads -->
+      <div class="card card-6">
+        <div class="card-header">📲</div>
+        <div class="card-body">
+          <h2>APK Downloads</h2>
+          <p>Modded apps for seamless bot pairing.</p>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px; width: 100%;">
+            <a href="https://trashcore-apk.example.com/whatsapp.apk" target="_blank" class="cta-button" style="font-size:0.95rem; padding:10px;">Download</a>
+            <a href="https://trashcore-apk.example.com/whatsapp-business.apk" target="_blank" class="cta-button" style="font-size:0.95rem; padding:10px;">Download</a>
+            <a href="https://trashcore-apk.example.com/dh-whatsapp.apk" target="_blank" class="cta-button" style="font-size:0.95rem; padding:10px;">Download</a>
+            <a href="https://trashcore-apk.example.com/insta-pro.apk" target="_blank" class="cta-button" style="font-size:0.95rem; padding:10px;">Download</a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Stats Section -->
@@ -619,317 +681,161 @@
         <div class="stat-value" id="uptime">00:00:00</div>
         <div class="stat-label">Site Uptime</div>
       </div>
+      <div class="stat-item github-stats" id="githubStats" style="display: none;">
+        <div class="stat-value" id="githubFollowers">--</div>
+        <div class="stat-label">GitHub Followers</div>
+        <div class="stat-value" id="githubFollowing">--</div>
+        <div class="stat-label">Following</div>
+        <a href="https://github.com/Tennor-modz" target="_blank" class="cta-button">Follow</a>
+      </div>
     </div>
   </div>
 
-  <!-- Scripts -->
   <script>
-    // === PWA INSTALL PROMPT ===
-    let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'flex';
-    });
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        installBtn.style.display = 'none';
-      }
-    });
-
-    // === THEME TOGGLE ===
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      body.classList.add('dark-mode');
-      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-    }
-    themeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      const isDark = body.classList.contains('dark-mode');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-    });
-
-    // === MENU TOGGLE ===
-    const menuToggle = document.getElementById('menuToggle');
-    const menuItems = document.getElementById('menuItems');
-    menuToggle.addEventListener('click', () => menuItems.classList.toggle('show'));
-    document.addEventListener('click', (e) => {
-      if (!menuToggle.contains(e.target) && !menuItems.contains(e.target)) {
-        menuItems.classList.remove('show');
-      }
-    });
-
-    // === BACKGROUND MUSIC ===
     document.addEventListener('DOMContentLoaded', () => {
-      const backgroundMusic = document.getElementById('backgroundMusic');
-      
-      // Try to play music after user interaction
-      document.body.addEventListener('click', function initAudio() {
-        backgroundMusic.volume = 0.3; // Set volume to 30%
-        backgroundMusic.play().catch(e => {
-          console.log('Audio play failed:', e);
-        });
-        document.body.removeEventListener('click', initAudio);
-      }, {once: true});
-      
-      // Add event listener for when music ends to loop it
-      backgroundMusic.addEventListener('ended', function() {
-        this.currentTime = 0;
-        this.play();
-      });
-    });
-
-    // === VISITOR COUNTER ===
-    function updateVisitorCount() {
-      const key = 'trashcoreVisitorCount';
-      let count = localStorage.getItem(key);
-      if (count === null) {
-        count = 1;
-      } else {
-        count = parseInt(count) + 1;
-      }
-      localStorage.setItem(key, count.toString());
-      document.getElementById('visitorCount').textContent = count.toLocaleString();
-    }
-
-    // === SITE UPTIME ===
-    let startTime = Date.now();
-    
-    function calculateUptime() {
-      const now = Date.now();
-      const uptime = now - startTime;
-      
-      const seconds = Math.floor((uptime / 1000) % 60);
-      const minutes = Math.floor((uptime / (1000 * 60)) % 60);
-      const hours = Math.floor((uptime / (1000 * 60 * 60)) % 24);
-      
-      const uptimeText = 
-        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      
-      document.getElementById('uptime').textContent = uptimeText;
-      
-      // Update every second
-      setTimeout(calculateUptime, 1000);
-    }
-
-    // === WELCOME MESSAGE SPEECH ===
-    function speakWelcomeMessage() {
-      // Check if speech synthesis is supported
-      if ('speechSynthesis' in window) {
-        // Cancel any ongoing speech
-        window.speechSynthesis.cancel();
-        
-        // Create speech utterance
-        const welcomeMsg = new SpeechSynthesisUtterance();
-        welcomeMsg.text = "Welcome to Trashcore! EAT, CODE, and BOT like a pro!";
-        welcomeMsg.rate = 0.9; // Slightly slower speech
-        welcomeMsg.pitch = 1.1; // Slightly higher pitch for enthusiasm
-        
-        // Try to use a better voice if available
-        setTimeout(() => {
-          const voices = window.speechSynthesis.getVoices();
-          const preferredVoices = voices.filter(voice => 
-            voice.name.includes('Google') || 
-            voice.name.includes('Samantha') || 
-            voice.name.includes('female') || 
-            voice.lang.includes('en')
-          );
-          
-          if (preferredVoices.length > 0) {
-            welcomeMsg.voice = preferredVoices[0];
-          } else if (voices.length > 0) {
-            welcomeMsg.voice = voices[0];
-          }
-          
-          // Speak the message
-          window.speechSynthesis.speak(welcomeMsg);
-        }, 100);
-        
-        return true;
-      } else {
-        // Fallback for browsers without speech synthesis
-        console.log("Speech synthesis not supported in this browser.");
-        return false;
-      }
-    }
-
-    // === STAR BACKGROUND ANIMATION ===
-    class Star {
-      constructor(x, y, size, speed, waveOffset) {
-        this.x = x;
-        this.y = y;
-        this.size = size;
-        this.speed = speed;
-        this.waveOffset = waveOffset;
-        this.originalY = y;
-        this.brightness = Math.random() * 50 + 50;
-      }
-      
-      update(time) {
-        // Move in wave pattern
-        this.y = this.originalY + Math.sin(time * this.speed + this.waveOffset) * 15;
-        
-        // Pulsate brightness
-        this.brightness = 70 + Math.sin(time * 0.5 + this.waveOffset) * 30;
-      }
-      
-      draw(ctx) {
-        ctx.fillStyle = `rgba(255, 50, 50, ${this.brightness / 100})`;
-        ctx.beginPath();
-        
-        // Draw 5-pointed star
-        const spikes = 5;
-        const outerRadius = this.size;
-        const innerRadius = this.size / 2.5;
-        const centerX = this.x;
-        const centerY = this.y;
-        
-        for (let i = 0; i < spikes * 2; i++) {
-          const radius = i % 2 === 0 ? outerRadius : innerRadius;
-          const angle = Math.PI / spikes * i;
-          const x = centerX + Math.cos(angle) * radius;
-          const y = centerY + Math.sin(angle) * radius;
-          
-          if (i === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
+      // === TELEGRAM BANNER ===
+      const banner = document.getElementById('telegramBanner');
+      const remindBtn = document.getElementById('remindLaterBtn');
+      if (banner && remindBtn) {
+        const dismissed = sessionStorage.getItem('trashcoreTelegramDismissed') === 'true';
+        if (!dismissed) {
+          setTimeout(() => {
+            banner.style.display = 'flex';
+            document.body.classList.add('has-telegram-banner');
+          }, 2000);
         }
-        
-        ctx.closePath();
-        ctx.fill();
+        remindBtn.addEventListener('click', () => {
+          banner.style.display = 'none';
+          document.body.classList.remove('has-telegram-banner');
+          sessionStorage.setItem('trashcoreTelegramDismissed', 'true');
+        });
       }
-    }
-    
-    function initStarsBackground() {
+
+      // === THEME TOGGLE ===
+      const themeToggle = document.getElementById('themeToggle');
+      const body = document.body;
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        body.classList.add('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+      themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        const isDark = body.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      });
+
+      // === MENU TOGGLE ===
+      const menuToggle = document.getElementById('menuToggle');
+      const menuItems = document.getElementById('menuItems');
+      menuToggle.addEventListener('click', () => menuItems.classList.toggle('show'));
+      document.addEventListener('click', (e) => {
+        if (!menuToggle.contains(e.target) && !menuItems.contains(e.target)) {
+          menuItems.classList.remove('show');
+        }
+      });
+
+      // === BACKGROUND MUSIC ===
+      const bgm = document.getElementById('backgroundMusic');
+      document.body.addEventListener('click', function init() {
+        bgm.volume = 0.3;
+        bgm.play().catch(console.log);
+        document.body.removeEventListener('click', init);
+      }, { once: true });
+
+      // === VISITOR + UPTIME ===
+      const vKey = 'trashcoreVisitorCount';
+      let v = localStorage.getItem(vKey);
+      v = v ? parseInt(v) + 1 : 1;
+      localStorage.setItem(vKey, v.toString());
+      document.getElementById('visitorCount').textContent = v.toLocaleString();
+
+      let start = Date.now();
+      setInterval(() => {
+        const t = Date.now() - start;
+        const h = Math.floor(t / 3600000).toString().padStart(2, '0');
+        const m = Math.floor((t % 3600000) / 60000).toString().padStart(2, '0');
+        const s = Math.floor((t % 60000) / 1000).toString().padStart(2, '0');
+        document.getElementById('uptime').textContent = `${h}:${m}:${s}`;
+      }, 1000);
+
+      // === GITHUB STATS ===
+      fetch('https://api.github.com/users/Tennor-modz')
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('githubFollowers').textContent = data.followers.toLocaleString();
+          document.getElementById('githubFollowing').textContent = data.following.toLocaleString();
+          document.getElementById('githubStats').style.display = 'block';
+        })
+        .catch(() => {});
+
+      // === WELCOME SPEECH ===
+      if (!sessionStorage.getItem('trashcoreWelcomeSpoken') && 'speechSynthesis' in window) {
+        setTimeout(() => {
+          const u = new SpeechSynthesisUtterance("Welcome to Trashcore! EAT, CODE, and BOT like a pro!");
+          u.rate = 0.9; u.pitch = 1.1;
+          speechSynthesis.speak(u);
+          sessionStorage.setItem('trashcoreWelcomeSpoken', '1');
+        }, 1500);
+      }
+
+      // === STARS ===
       const canvas = document.getElementById('starsCanvas');
       const ctx = canvas.getContext('2d');
-      
-      // Set canvas size to window size
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      
-      resizeCanvas();
-      window.addEventListener('resize', resizeCanvas);
-      
-      // Create stars
+      const resize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
+      resize(); window.addEventListener('resize', resize);
       const stars = [];
-      const numStars = Math.min(150, Math.floor(window.innerWidth * window.innerHeight / 10000));
-      
-      for (let i = 0; i < numStars; i++) {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
-        const size = Math.random() * 3 + 1;
-        const speed = Math.random() * 0.02 + 0.005;
-        const waveOffset = Math.random() * Math.PI * 2;
-        
-        stars.push(new Star(x, y, size, speed, waveOffset));
+      const count = Math.min(120, Math.floor(innerWidth * innerHeight / 12000));
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 2.5 + 1,
+          speed: Math.random() * 0.02 + 0.005,
+          offset: Math.random() * Math.PI * 2,
+          brightness: Math.random() * 50 + 50
+        });
       }
-      
-      // Animation loop
-      let animationFrame;
-      let time = 0;
-      
-      function animate() {
+      let t = 0;
+      const draw = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        time += 0.01;
-        
-        // Draw stars
-        stars.forEach(star => {
-          star.update(time);
-          star.draw(ctx);
-        });
-        
-        animationFrame = requestAnimationFrame(animate);
-      }
-      
-      animate();
-      
-      // Pause animation when page is not visible
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          cancelAnimationFrame(animationFrame);
-        } else {
-          animate();
-        }
-      });
-    }
-
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      updateVisitorCount();
-      calculateUptime();
-      
-      // Initialize stars background
-      initStarsBackground();
-      
-      // Setup welcome message
-      const hasHeardWelcome = sessionStorage.getItem('hasHeardTrashcoreWelcome');
-      
-      // Auto-play welcome message on page load after a short delay
-      if (!hasHeardWelcome) {
-        // Try to speak immediately
-        setTimeout(() => {
-          // First try without user interaction
-          const success = speakWelcomeMessage();
-          
-          // If it fails, set up user interaction fallback
-          if (!success) {
-            document.body.addEventListener('click', function initSpeech() {
-              speakWelcomeMessage();
-              document.body.removeEventListener('click', initSpeech);
-            }, {once: true});
+        t += 0.01;
+        stars.forEach(s => {
+          s.y = s.y + Math.sin(t * s.speed + s.offset) * 0.8;
+          s.brightness = 70 + Math.sin(t * 0.5 + s.offset) * 30;
+          ctx.fillStyle = `rgba(255, 50, 50, ${s.brightness / 100})`;
+          ctx.beginPath();
+          const pts = 5;
+          for (let i = 0; i < pts * 2; i++) {
+            const r = i % 2 === 0 ? s.size : s.size / 2.5;
+            const a = Math.PI / pts * i;
+            const x = s.x + Math.cos(a) * r;
+            const y = s.y + Math.sin(a) * r;
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
           }
-          
-          sessionStorage.setItem('hasHeardTrashcoreWelcome', 'true');
-        }, 1000);
-      }
-      
-      // Load voices properly
-      if ('speechSynthesis' in window) {
-        let voicesLoaded = false;
-        
-        const loadVoices = () => {
-          if (!voicesLoaded && window.speechSynthesis.getVoices().length > 0) {
-            voicesLoaded = true;
-            window.speechSynthesis.onvoiceschanged = null;
-          }
-        };
-        
-        loadVoices();
-        window.speechSynthesis.onvoiceschanged = loadVoices;
-      }
-
-      // Fix WhatsApp channel link encoding issues
-      const whatsappChannelLink = document.querySelector('a[href="https://whatsapp.com/channel/0029VbAWe2uIHphDEiz3Vh2r"]');
-      if (whatsappChannelLink) {
-        whatsappChannelLink.addEventListener('click', function(e) {
-          e.preventDefault();
-          window.open('https://whatsapp.com/channel/0029VbAWe2uIHphDEiz3Vh2r', '_blank');
+          ctx.closePath(); ctx.fill();
         });
-      }
+        requestAnimationFrame(draw);
+      };
+      draw();
     });
-  </script>
 
-  <!-- Register Service Worker for PWA -->
-  <script>
+    // === PWA ===
+    let dp;
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault(); dp = e; document.getElementById('installBtn').style.display = 'flex';
+    });
+    document.getElementById('installBtn')?.addEventListener('click', async () => {
+      if (dp) { dp.prompt(); const r = await dp.userChoice; if (r.outcome === 'accepted') dp = null; }
+      document.getElementById('installBtn').style.display = 'none';
+    });
+
+    // === SW ===
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(reg => console.log('Service Worker registered:', reg.scope))
-          .catch(err => console.warn('Service Worker registration failed:', err));
+        navigator.serviceWorker.register('/sw.js').catch(console.warn);
       });
     }
   </script>
